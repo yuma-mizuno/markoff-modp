@@ -1,4 +1,4 @@
-# Markoff mod p
+# Markoff surface modulo sufficiently large primes
 
 This repository is a Lean 4 formalization of strong approximation for the
 Markoff surface modulo sufficiently large primes. It formalizes the results of
@@ -13,37 +13,55 @@ the BGS results yield strong approximation for all sufficiently large primes.
 
 Most of the formalization was carried out by GPT-5.6-Sol.
 
-## Formalization Blueprint
+## Blueprint
 
 **[Strong Approximation for the Markoff surface](https://yuma-mizuno.github.io/markoff-modp/)**
 
-## Strong approximation for large primes
+## Formalized Result
 
 For a commutative semiring $R$, define the Markoff surface by
 
-$$
+```math
 \mathrm{Markoff}(R)
   = \left\lbrace (x,y,z) \in R^3 : x^2+y^2+z^2=3xyz \right\rbrace.
-$$
+```
 
 Let
 
-$$
+```math
 p_0 = 2^9(48^3+1)^{18}
       \left(2^9(9^9)^{2^9}\right)^8+1.
-$$
+```
 
-**Theorem.** For every prime $p$ with $p_0 \le p$, the map
+**Theorem** (Strong approximation for large primes). For every prime $p$ with $p_0 \le p$, the map
 
-$$
+```math
 \mathrm{Markoff}(ℕ)
   \longrightarrow
 \mathrm{Markoff}(ℤ/pℤ)
-$$
+```
 
 is surjective.
 
-This theorem is formalized as
+The statement is formlized as
+```lean4
+import Mathlib
+
+open CategoryTheory
+
+def Markoff : CommSemiRingCat ⥤ Type where
+  obj R := {⟨x, y, z⟩ : R × R × R | x ^ 2 + y ^ 2 + z ^ 2 = 3 * x * y * z}
+  map f := ↾fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨f.hom x, f.hom y, f.hom z⟩, by
+    simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
+
+theorem Markoff.reduction_surjective_of_explicitBound :
+    let p₀ := 2 ^ 9 * (48 ^ 3 + 1) ^ 18 * (2 ^ 9 * (9 ^ 9) ^ (2 ^ 9)) ^ 8 + 1
+    ∀ (p : ℕ), p.Prime → p₀ ≤ p →
+      Function.Surjective
+        (Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
+  sorry
+```
+and its proof is given as
 [`BGS.Markoff.reduction_surjective_of_explicitBound`](BGS/Markoff/Assembly/ReductionSurjectivity.lean#L24-L35).
 
 ## Improving the cutoff
