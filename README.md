@@ -11,6 +11,8 @@ which is formalized here using
 [Daniel E. Martin's later elementary proof](https://arxiv.org/abs/2502.15960),
 the BGS results yield strong approximation for all sufficiently large primes.
 
+Most of the formalization was carried out by GPT-5.6-Sol.
+
 ## Formalization Blueprint
 
 **[Strong Approximation for the Markoff surface](https://yuma-mizuno.github.io/markoff-modp/)**

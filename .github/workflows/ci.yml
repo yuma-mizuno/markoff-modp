@@ -1,4 +1,4 @@
-name: Comparator
+name: BGS CI and Blueprint Pages
 
 on:
   pull_request:
@@ -7,16 +7,18 @@ on:
       - main
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.repository }}-bgs-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  compare:
-    name: Verify public theorem boundary
+  verify:
+    name: Build, render, and verify
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
@@ -25,27 +27,54 @@ jobs:
       COMPARATOR_REF: 1b82ba006811f7e25d53858252372e4d85fd3921
     steps:
       - name: Check out BGS
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+
+      # One-time repository setup is still required:
+      # Settings > Pages > Build and deployment > Source: GitHub Actions.
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+
+      # For this complex workflow, manage the Lake cache explicitly. The key
+      # follows lean-action's standard scheme: platform + resolved dependency
+      # graph + commit, with a same-environment fallback to the previous commit.
+      - name: Restore Lake cache
+        id: lake-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-${{ runner.arch }}-lake-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-lake-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean') }}-
 
       - name: Set up Lean
         uses: leanprover/lean-action@v1
         with:
-          # The default action configuration runs the repository's full
-          # `lake build`. Comparator only needs the production endpoint below,
-          # so drive that build explicitly.
+          auto-config: false
           build: false
+          test: false
           use-github-cache: false
-          use-mathlib-cache: false
+          use-mathlib-cache: true
 
-      - name: Fetch Mathlib cache
-        run: lake exe cache get
+      - name: Build Lean project once
+        run: lake build BGS BGSBlueprint
 
-      - name: Build production dependency for Comparator
-        run: lake build BGS.Markoff.Assembly.ReductionSurjectivity
+      # Save before the long-running consumers so a later Comparator failure
+      # does not discard a successful compilation. Fork PRs may restore but
+      # cannot write caches; actions/cache treats that as a non-fatal warning.
+      - name: Save Lake cache
+        if: steps.lake-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: .lake/build
+          key: ${{ steps.lake-cache.outputs.cache-primary-key }}
+
+      - name: Render Blueprint
+        run: bash scripts/ci-pages.sh --skip-build
 
       - name: Restore verifier binaries
         id: verifier-cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           path: ~/verifier-bin
           key: verifier-bin-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain') }}-${{ env.LANDRUN_REF }}-${{ env.LEAN4EXPORT_REF }}-${{ env.COMPARATOR_REF }}-v1
@@ -65,7 +94,7 @@ jobs:
 
       - name: Check out lean4export for Lean 4.32.0-rc1
         if: steps.verifier-cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: leanprover/lean4export
           ref: ${{ env.LEAN4EXPORT_REF }}
@@ -80,7 +109,7 @@ jobs:
 
       - name: Check out Comparator for Lean 4.32.0-rc1
         if: steps.verifier-cache.outputs.cache-hit != 'true'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: leanprover/comparator
           ref: ${{ env.COMPARATOR_REF }}
@@ -95,7 +124,7 @@ jobs:
 
       - name: Save verifier binaries
         if: steps.verifier-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v5
+        uses: actions/cache/save@v6
         with:
           path: ~/verifier-bin
           key: ${{ steps.verifier-cache.outputs.cache-primary-key }}
@@ -112,9 +141,31 @@ jobs:
         run: |
           systemd-run \
             --property=RestrictAddressFamilies=~AF_UNIX \
-            --user --pty \
+            --user --pty --pipe \
             -E PATH="$PATH" \
             -E COMPARATOR_LANDRUN="$HOME/verifier-bin/landrun" \
             -E COMPARATOR_LEAN4EXPORT="$HOME/verifier-bin/lean4export" \
             --working-directory "$GITHUB_WORKSPACE" \
             -- bash -c 'lake env comparator Comparator/config.json'
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _out/site/html-multi
+
+  deploy:
+    name: Deploy Blueprint site
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
