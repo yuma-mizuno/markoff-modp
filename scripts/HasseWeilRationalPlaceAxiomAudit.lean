@@ -1,0 +1,6 @@
+import BGS.HasseWeil.RationalPlace
+
+#print axioms BGS.HasseWeil.ratFuncRationalFinitePlaceToDegreeLT_injective
+#print axioms BGS.HasseWeil.finiteExtensionRationalPlaceEquivSubtype
+#print axioms BGS.HasseWeil.finiteExtensionRationalPlaceCount_eq_natCard_subtype
+#print axioms BGS.HasseWeil.finiteExtensionRationalPlace_finite

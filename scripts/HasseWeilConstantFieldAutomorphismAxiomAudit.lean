@@ -1,0 +1,10 @@
+import BGS.HasseWeil.ConstantFieldAutomorphism
+
+#print axioms BGS.HasseWeil.tensorConstantAutHom_injective
+#print axioms BGS.HasseWeil.planeCurveConstantAlgEquiv_baseChange
+#print axioms BGS.HasseWeil.planeCurveConstantAlgEquiv_algebraMap
+#print axioms BGS.HasseWeil.planeCurveConstantAutHom_injective
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChange_finrank
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChange_isGalois
+#print axioms BGS.HasseWeil.planeCurveConstantAutOverBaseMulEquiv
+#print axioms BGS.HasseWeil.orderOf_planeCurveConstantFrobeniusAlgEquiv

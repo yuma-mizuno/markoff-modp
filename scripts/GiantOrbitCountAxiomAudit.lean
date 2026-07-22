@@ -1,0 +1,39 @@
+import BGS.Markoff.Assembly.NormalizationCount
+import BGS.Markoff.Assembly.NormalizedSmallOrderCount
+import BGS.Markoff.Assembly.PuncturedSmallOrderCount
+import BGS.Markoff.Core.RotationTorus
+import BGS.Markoff.Core.TraceClassification
+import BGS.Markoff.Core.Statements
+import BGS.Markoff.Core.ParabolicFibers
+
+#print axioms BGS.Markoff.thirdCoordinatePolynomial_eval
+#print axioms BGS.Markoff.mem_markoffPointsWithFirstTwoCoordinates_iff
+#print axioms BGS.Markoff.markoffPointsWithFirstTwoCoordinates_card_le_two
+#print axioms BGS.Markoff.elementsOfOrderLessThan_card_le_sum_range
+#print axioms BGS.Markoff.sum_orders_below_bound_le_bound_sq
+#print axioms BGS.Markoff.lowOrderTraceSet_card_le_parabolic_add_two_mul_bound_sq
+#print axioms BGS.Markoff.mem_normalizedMarkoffPointsWithFirstTwoCoordinates_iff
+#print axioms BGS.Markoff.normalizedMarkoffPointsWithFirstTwoCoordinates_card_le_two
+#print axioms BGS.Markoff.mem_normalizedMarkoffPointsWithFirstTwoCoordinatesIn_iff
+#print axioms BGS.Markoff.normalizedMarkoffPointsWithFirstTwoCoordinatesIn_card_le
+#print axioms BGS.Markoff.rotationOrder_splitTorusTrace
+#print axioms BGS.Markoff.splitTorusTrace_mem_boundedOrderTraceSet_of_rotationOrder_lt
+#print axioms BGS.Markoff.rotationOrder_eq_orderOf_extensionEigenvalue
+#print axioms BGS.Markoff.algebraMap_quadraticNormOneTrace
+#print axioms BGS.Markoff.rotationOrder_quadraticNormOneTrace
+#print axioms BGS.Markoff.quadraticNormOneTrace_mem_boundedOrderTraceSet_of_rotationOrder_lt
+#print axioms BGS.Markoff.isSquare_algebraMap_quadraticFiniteField
+#print axioms BGS.Markoff.exists_split_or_quadraticNormOneTrace
+#print axioms BGS.Markoff.concreteLowOrderTraceSet_card_le
+#print axioms BGS.Markoff.mem_concreteLowOrderTraceSet_of_rotationOrder_lt
+#print axioms BGS.Markoff.normalizedMarkoffPointsWithSmallFirstTwoRotationOrders_subset_traceSet
+#print axioms BGS.Markoff.normalizedMarkoffPointsWithSmallFirstTwoRotationOrders_card_le
+#print axioms BGS.Markoff.orbitComplementCard_le_finset_of_subset
+#print axioms BGS.Markoff.hasGiantOrbitAt_of_complement_subset_finset
+#print axioms BGS.Markoff.puncturedNormalizationEquiv
+#print axioms BGS.Markoff.puncturedMarkoffPointsWithSmallFirstTwoRotationOrders_card_eq_normalized_erase_origin
+#print axioms BGS.Markoff.puncturedMarkoffPointsWithSmallFirstTwoRotationOrders_card_le
+#print axioms BGS.Markoff.normalizedFiber1_two_eq_empty_of_mod_four_eq_three
+#print axioms BGS.Markoff.exists_parabolic_line_decomposition_of_mod_four_eq_one
+#print axioms BGS.Markoff.rotationOrder_two
+#print axioms BGS.Markoff.rotationOrder_neg_two

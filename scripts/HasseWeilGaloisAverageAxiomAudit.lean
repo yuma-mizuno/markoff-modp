@@ -1,0 +1,8 @@
+import BGS.HasseWeil.GaloisAverage
+
+#print axioms BGS.HasseWeil.sum_card_fixedBy_eq_card_group_of_isPretransitive
+#print axioms BGS.HasseWeil.sum_card_fixedBy_fibers_eq_card_mul_card_group
+#print axioms BGS.HasseWeil.sum_card_fixedBy_quotientFiber_eq_card_ker
+#print axioms BGS.HasseWeil.sum_card_fixedBy_quotientFiber_eq_card_ker_of_stabilizer_card
+#print axioms BGS.HasseWeil.abs_le_of_uniform_upper_and_abs_sum_le
+#print axioms BGS.HasseWeil.twistError_isBigO_geometric_of_uniform_upper_and_abs_sum_le

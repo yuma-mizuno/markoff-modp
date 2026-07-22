@@ -1,0 +1,13 @@
+import BGS.HasseWeil.ExactConstantExtensionAutomorphism
+
+#print axioms BGS.HasseWeil.exactConstantExtensionField
+#print axioms BGS.HasseWeil.exactConstantExtensionBaseAlgebra
+#print axioms BGS.HasseWeil.exactConstantExtensionBaseTower
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantAutHom
+#print axioms BGS.HasseWeil.exactConstantExtensionFunctionAutHom
+#print axioms BGS.HasseWeil.exactConstantExtension_constant_function_commute
+#print axioms BGS.HasseWeil.exactConstantExtensionCombinedAutHom
+#print axioms BGS.HasseWeil.exactConstantExtensionCombinedAutHom_injective
+#print axioms BGS.HasseWeil.exactConstantExtension_finrank_over_base
+#print axioms BGS.HasseWeil.exactConstantExtension_isGalois
+#print axioms BGS.HasseWeil.exactConstantExtensionAutMulEquiv

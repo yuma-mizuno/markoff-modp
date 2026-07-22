@@ -1,0 +1,10 @@
+import BGS.HasseWeil.ConstantFieldInfinityBase
+
+#print axioms BGS.HasseWeil.ratFuncCoefficientAlgHom_intDegree
+#print axioms BGS.HasseWeil.ratFuncCoefficientAlgHom_C
+#print axioms BGS.HasseWeil.ratFuncCoefficientAlgHom_inftyValuation
+#print axioms BGS.HasseWeil.ratFuncInfinityIntegersRingHom
+#print axioms BGS.HasseWeil.ratFuncInfinityIntegersRingHom_injective
+#print axioms BGS.HasseWeil.ratFuncInfinityIntegersRingHom_comap_infinityPlace
+#print axioms BGS.HasseWeil.ratFuncInfinityResidueFieldRingHom
+#print axioms BGS.HasseWeil.ratFuncInfinityResidueFieldRingHom_injective

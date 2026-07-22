@@ -1,0 +1,18 @@
+.lake/
+.build/
+_out/
+
+# Local Lean experiments and probe files.
+/.scratch/
+/tmp/
+/Book/
+/Papers/
+
+# Reproducible LaTeX build intermediates; keep source and rendered PDFs.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz

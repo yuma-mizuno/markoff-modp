@@ -1,0 +1,6 @@
+import BGS.Markoff.MiddleGame.TraceEquation
+
+#print axioms BGS.Markoff.mem_traceEquationSolutions_iff
+#print axioms BGS.Markoff.eval_twistedTracePolynomial_eq_zero_iff
+#print axioms BGS.Markoff.traceEquationLeftFiber_card_le_two
+#print axioms BGS.Markoff.traceEquationSolutions_card_le_two_mul_right

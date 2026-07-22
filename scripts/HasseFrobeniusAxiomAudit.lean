@@ -1,0 +1,8 @@
+import BGS.FiniteField.HasseFrobenius
+
+#print axioms BGS.FiniteField.exists_eq_algebraMap_of_frobenius_eq
+#print axioms BGS.FiniteField.legendreRationalPointEquivFrobeniusKernel
+#print axioms BGS.FiniteField.legendre_point_card_eq_frobeniusMinusIdentity_ker_card
+#print axioms BGS.FiniteField.legendreHasseWitnessEndomorphism
+#print axioms BGS.FiniteField.frobeniusNormForm_hasseWitness
+#print axioms BGS.FiniteField.legendreHasseNormWitness_nonnegative_iff_point_card_hasse

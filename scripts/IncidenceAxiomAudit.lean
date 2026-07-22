@@ -1,0 +1,24 @@
+import BGS.Markoff.Incidence.Counterexamples
+import BGS.Markoff.Incidence.CoordinateRing
+
+#print axioms BGS.FiniteField.sum_comp_sq_eq_sum_quadraticChar_add_one
+#print axioms BGS.FiniteField.sum_quadraticChar_one_sub_mul_sq
+#print axioms BGS.FiniteField.sum_quadraticChar_mul_sq_sub
+#print axioms BGS.FiniteField.exists_quadratic_conic_point_away_from_three
+#print axioms BGS.Markoff.incidenceBranchSquareClasses_independent_ratFunc
+#print axioms BGS.Markoff.incidenceAuxCoordinateRingBaseChangeExplicitEquiv
+#print axioms BGS.Markoff.incidenceAuxCoordinateRingEquivBiquadratic
+#print axioms BGS.Markoff.incidenceAuxGeometricallyIntegral_of_nondegenerate
+#print axioms BGS.Markoff.incidenceAux_offDiagonal_geometricallyIntegral
+#print axioms BGS.Markoff.auxiliaryTripleCount_eq
+#print axioms BGS.Markoff.quarticTrace_add_leadingChar_eq_monicCubicTrace
+#print axioms BGS.Markoff.markoffAuxiliaryEllipticCurve_delta_ne_zero
+#print axioms BGS.Markoff.admissible_of_not_mem_forbiddenIntermediateCoordinates
+#print axioms BGS.Markoff.incidenceAux_diagonal_point
+#print axioms BGS.FiniteField.legendreWeierstrassCurve_point_card_eq_card_add_one_add_characterSum
+#print axioms BGS.FiniteField.ellipticCubicCharacterSum_sq_le_four_mul_card_iff_point_card_hasse
+#print axioms BGS.FiniteField.ellipticCubicCharacterSum_sq_le_four_mul_card
+#print axioms BGS.Markoff.exists_auxiliary_triple_away_from_three
+#print axioms BGS.Markoff.incidenceAux_offDiagonal_point
+#print axioms BGS.Markoff.no_admissible_incidenceAux_point_at_thirteen
+#print axioms BGS.Markoff.no_admissible_incidenceAux_point_at_seventeen

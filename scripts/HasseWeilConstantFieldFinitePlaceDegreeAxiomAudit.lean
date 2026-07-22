@@ -1,0 +1,8 @@
+import BGS.HasseWeil.ConstantFieldFinitePlaceDegree
+
+#print axioms BGS.HasseWeil.ratFuncFiniteIntegralClosureBaseChangeAlgEquiv
+#print axioms BGS.HasseWeil.finitePlaceResidueFieldBaseChangeAlgEquiv
+#print axioms BGS.HasseWeil.finiteExtensionFinitePlace_degree_baseChange
+#print axioms BGS.HasseWeil.finiteExtensionFinitePlace_baseChange_rational_iff
+#print axioms BGS.HasseWeil.finiteExtensionFinitePlaceDegreeEquivRationalBaseChange
+#print axioms BGS.HasseWeil.natCard_finiteExtensionRationalFinitePlace_eq_degree_baseChange

@@ -1,0 +1,64 @@
+name: Blueprint Pages
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.repository }}-blueprint-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Blueprint site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # One-time repository setup is still required:
+      # Settings > Pages > Build and deployment > Source: GitHub Actions.
+      - name: Configure Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+      - name: Install Elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore Lake cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            .lake/packages
+            .lake/build/lib
+            .lake/build/ir
+          key: ${{ runner.os }}-lake-v1-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean', '**/*.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-v1-
+      - name: Fetch mathlib cache
+        run: lake exe cache get
+      - name: Build and render
+        run: bash scripts/ci-pages.sh
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _out/site/html-multi
+
+  deploy:
+    name: Deploy Blueprint site
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

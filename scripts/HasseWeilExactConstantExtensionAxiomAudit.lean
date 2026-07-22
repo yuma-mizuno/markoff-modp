@@ -1,0 +1,8 @@
+import BGS.HasseWeil.ExactConstantExtension
+
+#print axioms BGS.HasseWeil.linearDisjoint_of_inf_eq_bot_of_finite_galois_left
+#print axioms BGS.HasseWeil.exactConstantExtensionImages_linearDisjoint
+#print axioms BGS.HasseWeil.exactConstantExtensionTensor_isField
+#print axioms BGS.HasseWeil.exactConstantExtensionAlgebra
+#print axioms BGS.HasseWeil.exactConstantExtensionLinearEquiv
+#print axioms BGS.HasseWeil.exactConstantExtension_finrank

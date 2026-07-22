@@ -1,0 +1,6 @@
+import BGS.Markoff.Assembly.ReductionSurjectivity
+
+#print axioms BGS.Markoff.natMarkoff_eq_origin_or_sameComponent_root
+#print axioms BGS.Markoff.markoffReduction_surjective_of_strongApproximationAt
+#print axioms BGS.Markoff.strongApproximationAt_iff_markoffReduction_surjective
+#print axioms BGS.Markoff.reduction_surjective_of_explicitBound

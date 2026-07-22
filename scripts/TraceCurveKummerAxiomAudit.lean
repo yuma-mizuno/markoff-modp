@@ -1,0 +1,11 @@
+import BGS.Markoff.TraceCurve.Kummer
+
+#print axioms BGS.Markoff.eval_splitTraceCoverPolynomial_of_powerRootRelations
+#print axioms BGS.Markoff.splitTraceBaseKummerPolynomial_irreducible
+#print axioms BGS.Markoff.splitTraceBaseRoot_not_primePower
+#print axioms BGS.Markoff.splitTraceEtaKummerPolynomial_irreducible
+#print axioms BGS.Markoff.splitTraceXiRadicand_not_primePower
+#print axioms BGS.Markoff.splitTraceXiKummerPolynomial_irreducible
+#print axioms BGS.Markoff.splitTraceKummerTower_roots_on_cover
+#print axioms BGS.Markoff.splitTraceOddCoprimeKummerTower_isDomain
+#print axioms BGS.Markoff.splitTraceOddCoprimeKummerTower_isDomain_afterConstantExtension

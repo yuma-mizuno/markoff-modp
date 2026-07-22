@@ -1,0 +1,15 @@
+import BGS.Markoff.Core.ConicParametrization
+
+#print axioms BGS.Markoff.splitFiberEquiv
+#print axioms BGS.Markoff.normalizedRotate1_splitFiberPoint
+#print axioms BGS.Markoff.splitNormalizedFiber_zmod_natCard
+#print axioms BGS.Markoff.normalizedFiber1_zero_zmod_five_card
+#print axioms BGS.Markoff.normalizedPuncturedFiber1_zero_zmod_five_card
+#print axioms BGS.Markoff.no_split_torus_equiv_normalizedPuncturedFiber1_zero_zmod_five
+#print axioms BGS.Markoff.quadraticNormOneTorus_natCard
+#print axioms BGS.Markoff.quadraticNormFiberEquiv
+#print axioms BGS.Markoff.nonsplitNormalizedFiber_natCard
+#print axioms BGS.Markoff.normalizedRotationCycle_card_split
+#print axioms BGS.Markoff.normalizedRotationCycle_card_nonsplit
+#print axioms BGS.Markoff.normalizedRotationCycle_card_parabolicLineAtTwo
+#print axioms BGS.Markoff.normalizedRotationCycle_card_parabolicLineAtNegTwo

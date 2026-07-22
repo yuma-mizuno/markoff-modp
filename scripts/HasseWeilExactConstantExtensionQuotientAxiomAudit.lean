@@ -1,0 +1,12 @@
+import BGS.HasseWeil.ExactConstantExtensionQuotient
+
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantQuotient
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantQuotient_combined
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantQuotient_surjective
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantQuotient_ker
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantAutHom_injective
+#print axioms BGS.HasseWeil.exactConstantExtensionFrobenius
+#print axioms BGS.HasseWeil.orderOf_exactConstantExtensionFrobenius
+#print axioms BGS.HasseWeil.exactConstantExtensionConstantQuotient_frobenius
+#print axioms BGS.HasseWeil.exactConstantExtensionFrobeniusFiberEquiv
+#print axioms BGS.HasseWeil.natCard_exactConstantExtensionFrobeniusFiber

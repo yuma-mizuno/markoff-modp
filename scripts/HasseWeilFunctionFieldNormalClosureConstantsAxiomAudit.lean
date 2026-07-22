@@ -1,0 +1,8 @@
+import BGS.HasseWeil.FunctionFieldNormalClosureConstants
+
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantRestriction
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantRestriction_apply
+#print axioms BGS.HasseWeil.mem_functionFieldNormalClosureConstantRestriction_ker_iff
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantRestriction_surjective
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantField_isExact
+#print axioms BGS.HasseWeil.orderOf_functionFieldNormalClosureConstantFrobenius

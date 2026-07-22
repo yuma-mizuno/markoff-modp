@@ -1,0 +1,10 @@
+import BGS.HasseWeil.RationalPlaceTower
+
+#print axioms BGS.HasseWeil.finiteExtensionPlaceDegree_inl_eq_mul_relativeInertiaDeg
+#print axioms BGS.HasseWeil.finiteExtensionPlaceDegree_inr_eq_mul_relativeInertiaDeg
+#print axioms BGS.HasseWeil.finiteExtensionPlaceDegree_eq_under_mul_relativeInertiaDeg
+#print axioms BGS.HasseWeil.rationalFinitePlaceUnder
+#print axioms BGS.HasseWeil.rationalInfinityPlaceUnder
+#print axioms BGS.HasseWeil.rationalPlaceUnder
+#print axioms BGS.HasseWeil.rationalFinitePlace_relativeInertiaDeg_eq_one
+#print axioms BGS.HasseWeil.rationalInfinityPlace_relativeInertiaDeg_eq_one

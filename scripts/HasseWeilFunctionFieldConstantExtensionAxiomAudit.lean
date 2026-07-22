@@ -1,0 +1,7 @@
+import BGS.HasseWeil.FunctionFieldConstantExtension
+
+#print axioms BGS.HasseWeil.tensorFraction_isFractionRing
+#print axioms BGS.HasseWeil.planeCurveCoordinateRingBaseChangeAlgEquiv
+#print axioms BGS.HasseWeil.planeCurveCoordinateRingBaseChange_isDomain
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChangeAlgEquiv
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChangeAlgEquiv_tmul_one

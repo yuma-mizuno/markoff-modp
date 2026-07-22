@@ -1,0 +1,7 @@
+import BGS.HasseWeil.RatFuncConstantExtension
+
+#print axioms BGS.HasseWeil.ratFuncCoefficientAlgHom_injective
+#print axioms BGS.HasseWeil.ratFuncConstantLocalizationRingEquiv
+#print axioms BGS.HasseWeil.ratFuncConstantLocalizationLinearEquiv
+#print axioms BGS.HasseWeil.ratFuncCoefficient_moduleFinite
+#print axioms BGS.HasseWeil.ratFuncCoefficient_finrank

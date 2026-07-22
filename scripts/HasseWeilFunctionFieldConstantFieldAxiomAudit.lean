@@ -1,0 +1,10 @@
+import BGS.HasseWeil.FunctionFieldConstantField
+
+#print axioms BGS.HasseWeil.functionFieldConstantToFiniteIntegralClosure
+#print axioms BGS.HasseWeil.functionFieldConstantQuotientAlgHom
+#print axioms BGS.HasseWeil.functionFieldConstantQuotientAlgHom_injective
+#print axioms BGS.HasseWeil.ratFuncFinitePlaceResidueField_finite
+#print axioms BGS.HasseWeil.finiteExtensionFinitePlaceResidueField_finite
+#print axioms BGS.HasseWeil.functionFieldConstantField_finiteDimensional
+#print axioms BGS.HasseWeil.functionFieldConstantField_finite
+#print axioms BGS.HasseWeil.functionFieldConstantField_isGalois

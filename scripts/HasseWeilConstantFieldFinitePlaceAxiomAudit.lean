@@ -1,0 +1,7 @@
+import BGS.HasseWeil.ConstantFieldFinitePlace
+
+#print axioms BGS.HasseWeil.integralClosureRingEquivOfIntegralTower
+#print axioms BGS.HasseWeil.integralClosureAlgEquivOfIntegralTower
+#print axioms BGS.HasseWeil.ratFuncFiniteIntegralClosureRingEquiv
+#print axioms BGS.HasseWeil.planeCurveFiniteIntegralClosureBaseChangeRingEquiv
+#print axioms BGS.HasseWeil.planeCurveFinitePlaceBaseChangeEquiv

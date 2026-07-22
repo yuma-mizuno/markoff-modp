@@ -1,0 +1,19 @@
+import BGS.Markoff.Assembly.Unconditional
+
+#print axioms BGS.Markoff.exists_seededNonsplitTraceWeilBoundAssumption_of_generalHasseWeil
+#check BGS.Markoff.WeightedTraceTorsionIntersectionBound
+#check BGS.Markoff.corvajaZannierWeightedTraceBound
+#check BGS.Markoff.theoremOneStatement_of_generalHasseWeil
+#check BGS.Markoff.eventually_strongApproximationAt_of_generalHasseWeil
+#check BGS.Markoff.theoremTwoStatement_of_generalHasseWeil
+#print axioms BGS.Markoff.corvajaZannierWeightedTraceBound
+#print axioms BGS.Markoff.weightedTraceEquationSolutions_card_cast_le_of_weightedTraceBound
+#print axioms BGS.Markoff.exists_iterate_with_larger_secondRotationOrder_of_weightedTraceBound
+#print axioms BGS.Markoff.theoremOneStatement_of_specializedEstimates
+#print axioms BGS.Markoff.theoremOneStatement_of_generalHasseWeil
+#print axioms BGS.Markoff.eventually_strongApproximationAt_of_theoremOneStatement
+#print axioms BGS.Markoff.eventually_strongApproximationAt_of_generalHasseWeil
+#print axioms BGS.Markoff.theoremTwoStatement_of_generalHasseWeil
+#print axioms BGS.Markoff.theoremOneStatement
+#print axioms BGS.Markoff.eventually_strongApproximationAt
+#print axioms BGS.Markoff.theoremTwoStatement

@@ -1,0 +1,11 @@
+import BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
+
+#print axioms BGS.HasseWeil.FunctionFieldNormalClosureConstantBase
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantToBase
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantBaseAlgebra
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantBase_isScalarTower
+#print axioms BGS.HasseWeil.functionFieldNormalClosure_finiteDimensional_over_constantBase
+#print axioms BGS.HasseWeil.functionFieldNormalClosure_isGalois_over_constantBase
+#print axioms BGS.HasseWeil.functionFieldNormalClosureExactConstantExtensionField
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantExtensionAutMulEquiv
+#print axioms BGS.HasseWeil.functionFieldNormalClosureConstantExtensionQuotient_surjective

@@ -1,0 +1,9 @@
+import BGS.HasseWeil.ConstantFieldRatFuncCompatibility
+
+#print axioms BGS.HasseWeil.planeCurveCoordinateRingBaseChangeAlgEquiv_includeRight
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChangeAlgHom_function
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChange_ratFunc_commutes
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChangeRatFunc_isScalarTower
+#print axioms BGS.HasseWeil.planeCurveFunctionFieldBaseChangeCoefficientRatFunc_isScalarTower
+#print axioms BGS.HasseWeil.finiteDimensional_planeCurveFunctionFieldBaseChange_over_ratFunc
+#print axioms BGS.HasseWeil.separable_planeCurveFunctionFieldBaseChange_over_ratFunc

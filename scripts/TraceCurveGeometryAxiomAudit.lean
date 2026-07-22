@@ -1,0 +1,6 @@
+import BGS.Markoff.TraceCurve.Geometry
+
+#print axioms BGS.Markoff.eval_splitTraceCoverPolynomial_eq_zero_iff
+#print axioms BGS.Markoff.splitTraceCoverPolynomial_degenerate_factorization
+#print axioms BGS.Markoff.normalizedSplitTraceBirationalPolynomial_irreducible
+#print axioms BGS.Markoff.normalizedSplitTraceBirationalPolynomial_irreducible_after_baseChange

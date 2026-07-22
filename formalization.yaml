@@ -1,0 +1,230 @@
+version: "v0.3"
+
+project:
+  name: "Markoff mod p"
+  authors:
+    - "Yuma Mizuno"
+  license: "Apache-2.0"
+
+sources:
+  - title: "Strong Approximation and Diophantine Properties of Markoff Triples"
+    authors:
+      - "Jean Bourgain"
+      - "Alexander Gamburd"
+      - "Peter Sarnak"
+    id: "https://doi.org/10.1090/jams/1061"
+    type: "journal article"
+    license: "Publisher copyright"
+    prior_work: "Primary reference; the introduction states natural Markoff connectivity and formulates reduction surjectivity as the Strong Approximation Conjecture, while Theorem 1 is the giant-orbit and orbit-growth input."
+
+  - title: "Greatest common divisors of u - 1, v - 1 in positive characteristic and rational points on curves over finite fields"
+    authors:
+      - "Pietro Corvaja"
+      - "Umberto Zannier"
+    id: "https://doi.org/10.4171/JEMS/409"
+    type: "journal article"
+    license: "Publisher copyright"
+    prior_work: "Provides the selected middle-game trace-equation estimate."
+
+  - title: "Some cases of Vojta's Conjecture on integral points over function fields"
+    authors:
+      - "Pietro Corvaja"
+      - "Umberto Zannier"
+    id: "https://arxiv.org/abs/math/0512074v3"
+    type: "preprint"
+    license: "arXiv distribution license"
+    prior_work: "Author TeX is used for the Wronskian propositions reused by the 2013 paper."
+
+  - title: "Algebraic Function Fields and Codes"
+    authors:
+      - "Henning Stichtenoth"
+    id: "ISBN 978-3-540-76877-7"
+    type: "textbook, second edition"
+    license: "Publisher copyright"
+    author_contacted: "n/a"
+    prior_work: "Reference for function-field, divisor, zeta-function, and Hasse-Weil results."
+
+  - title: "Nonabelian level structures, Nielsen equivalence, and Markoff triples"
+    authors:
+      - "William Chen"
+    id: "https://arxiv.org/abs/2011.12940"
+    type: "preprint"
+    license: "arXiv distribution license"
+    prior_work: "Original source of the component-divisibility theorem and the first large-prime strong-approximation result; Chen's moduli-space proof is not formalized here."
+
+  - title: "A new proof of Chen's theorem for Markoff graphs"
+    authors:
+      - "Daniel E. Martin"
+    id: "https://arxiv.org/abs/2502.15960v1"
+    type: "preprint"
+    license: "arXiv distribution license"
+    prior_work: "Provides the later elementary Markoff-graph proof formalized here for Chen's component-divisibility theorem."
+
+  - title: "Connectivity of Markoff mod-p graphs and maximal divisors"
+    authors:
+      - "Jillian Eddy"
+      - "Elena Fuchs"
+      - "Matthew Litman"
+      - "Daniel Martin"
+      - "Nico Tripeny"
+    id: "https://arxiv.org/abs/2308.07579v1"
+    type: "preprint"
+    license: "arXiv distribution license"
+    prior_work: >-
+      Makes the BGS connectivity threshold explicit and sharpens it using
+      maximal divisors and a finite Algorithm 1 certificate. The formal route
+      uses its explicit-method architecture but proves a different,
+      conservative all-divisor cutoff.
+
+status:
+  scope: >-
+    Lean formalization of the Markoff surface on commutative semirings, the
+    classical connectivity of natural-number Markoff solutions, and the
+    selected BGS route to finite-field transitivity, culminating in explicit
+    surjectivity of reduction from natural solutions to solutions modulo every
+    prime at least
+    2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1. Supporting results
+    include the giant-orbit theorem, eventual and explicit transitivity, the
+    exceptional-prime estimate, and the Corvaja-Zannier and affine Hasse-Weil
+    inputs used on that route.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Quot.sound"
+    - "Classical.choice"
+  main_results:
+    - declaration: "BGS.Markoff.reduction_surjective_of_explicitBound"
+      file: "BGS/Markoff/Assembly/ReductionSurjectivity.lean"
+      sorry_count: 0
+      axioms:
+        - "propext"
+        - "Quot.sound"
+        - "Classical.choice"
+      comparator_config: "Comparator/config.json"
+      literature_dependencies: []
+
+automation:
+  methods:
+    - method: "manual"
+      models: []
+      framework: "Lean 4 and mathlib"
+      tool_setup: "Lake builds, DOI/arXiv-cited Verso Blueprint, and declaration-level axiom audits."
+      cost:
+        wall_time: "Not tracked"
+        spend_usd: "Not tracked"
+        hardware: "Local Windows workstation"
+      prompting_notes: "Human-directed theorem design, source audit, proof review, and acceptance testing."
+
+    - method: "agent"
+      models:
+        - "OpenAI Codex (GPT-5 family)"
+      framework: "Codex"
+      tool_setup: "Lean diagnostics, Lake builds, repository search, source reconstruction, and Comparator CI."
+      cost:
+        wall_time: "Not tracked"
+        spend_usd: "Subscription-based; exact spend not tracked"
+        hardware: "Local Windows workstation and GitHub-hosted Ubuntu runners"
+      prompting_notes: "Iterative human-directed formalization with explicit source, soundness, and Blueprint requirements."
+  spend_usd: "Not tracked"
+  notes: "Automation assisted implementation; the checked Lean declarations and source-aligned Blueprint are the auditable artifacts."
+
+fidelity:
+  divergences: >-
+    Original Markoff coordinates and normalized trace coordinates are kept
+    type-distinct. Rotation order is defined with orderOf, including the gcd
+    factor omitted by an exponent quotient. The Corvaja-Zannier optimization
+    uses the corrected Q = 32 parameter split while retaining the published
+    bound. The affine Hasse-Weil interface uses a coarser coefficient 8 bound
+    sufficient for BGS. Chen's component-divisibility theorem is formalized
+    using Martin's later elementary proof; Chen's original moduli-space proof
+    is not formalized. The source equation is extended to commutative
+    semirings, and
+    the public endpoint includes both the natural and modular origins. The
+    explicit endpoint uses an elementary
+    ninth-moment all-divisor estimate and the adaptive cutoff
+    `2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1`; it deliberately differs from the optimized
+    primorial/product cutoff in arXiv:2308.07579 and does not import that
+    preprint's finite Algorithm 1 certificate. Exact source provenance and
+    historical alternatives are recorded in the Blueprint.
+
+review:
+  status: "self-assessed"
+  reviewers:
+    - "Yuma Mizuno"
+  notes: >-
+    The main result is kernel-checked with zero production sorry declarations.
+    Its axiom dependencies are audited, and Comparator checks its exact
+    statement and permitted axioms in CI. Supporting declarations are also
+    kernel-checked. No independent peer review is claimed.
+
+alignment:
+  namespace: "BGS"
+  statements:
+    - source: "BGS Introduction, natural Markoff orbit of (1,1,1)"
+      lean: "BGS.Markoff.natMarkoff_eq_origin_or_sameComponent_root"
+      module: "BGS.Markoff.Core.NatConnectivity"
+      status: "proved"
+      note: "The natural Markoff surface is the origin together with one component rooted at (1,1,1), proved by well-founded Vieta descent."
+
+    - source: "BGS Strong Approximation Conjecture, source-faithful reduction statement"
+      lean: "BGS.Markoff.reduction_surjective_of_explicitBound"
+      module: "BGS.Markoff.Assembly.ReductionSurjectivity"
+      status: "proved"
+      note: >-
+        The coordinatewise map from natural Markoff solutions to Markoff
+        solutions modulo p is surjective for primes at least
+        2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1. The formal bridge
+        proves this reduction statement equivalent to finite-field
+        transitivity, with natural connectivity used in the reverse direction.
+
+    - source: "Bourgain-Gamburd-Sarnak, Theorem 1"
+      lean: "BGS.Markoff.theoremOneStatement"
+      module: "BGS.Markoff.Assembly.Unconditional"
+      status: "proved"
+      note: "Both the logarithmic orbit lower bound and the giant-orbit conclusion are unconditional."
+
+    - source: "BGS Conjecture 1 for all sufficiently large primes"
+      lean: "BGS.Markoff.eventually_strongApproximationAt"
+      module: "BGS.Markoff.Assembly.Unconditional"
+      status: "proved"
+      note: "Combines BGS Theorem 1 with Chen's component-cardinality divisibility theorem, proved in Lean via Martin's later elementary proof, then applies the natural-connectivity bridge from punctured transitivity to reduction surjectivity. Chen first obtained strong approximation for all sufficiently large primes from this divisibility result."
+
+    - source: "Eddy--Fuchs--Litman--Martin--Tripeny explicit-connectivity method"
+      lean: "BGS.Markoff.puncturedMarkoffTransitiveAt_of_concreteExplicitBound"
+      module: "BGS.Markoff.Assembly.ExplicitPuncturedTransitivity"
+      status: "proved"
+      note: >-
+        Proves transitivity for primes at least
+        2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1 by an adaptive all-divisor route. This is intentionally
+        not the optimized primorial/product constant of the preprint and does
+        not claim to verify its Algorithm 1 output.
+
+    - source: "Bourgain-Gamburd-Sarnak, Theorem 2"
+      lean: "BGS.Markoff.theoremTwoStatement"
+      module: "BGS.Markoff.Assembly.Unconditional"
+      status: "proved"
+      note: "Exceptional-prime bound derived from eventual strong approximation."
+
+    - source: "Corvaja-Zannier (2013), Theorem 2 and Corollary 2"
+      lean: "BGS.CorvajaZannier.generalCorvajaZannierPlaneCurveTheorem"
+      module: "BGS.CorvajaZannier.GeneralCorvajaZannier"
+      status: "proved"
+      note: "General finite-field plane-curve theorem and the BGS weighted specialization are proved in-repository."
+
+    - source: "Stichtenoth, Chapter V Hasse-Weil bound and supporting function-field theory"
+      lean: "BGS.HasseWeil.generalBivariateAffineHasseWeilTheorem"
+      module: "BGS.HasseWeil.GeneralBivariateAffineHasseWeil"
+      status: "proved"
+      note: "Closed-place Hasse-Weil is converted to the affine bivariate point-count interface used by BGS."
+
+    - source: "Chen, Markoff component-cardinality divisibility theorem; Lean proof follows Martin"
+      lean: "BGS.Markoff.prime_dvd_puncturedGammaOrbit_ncard"
+      module: "BGS.Markoff.Assembly.OrbitDivisibility"
+      status: "proved"
+      note: "Formalizes Chen's divisibility theorem for every punctured Gamma-orbit when p > 3, using Martin's later Penner-weight proof rather than Chen's original moduli-space proof."
+
+acknowledgements: >-
+  Built on Lean 4, mathlib, Verso Blueprint, and leanprover/comparator. The
+  project relies on the cited authors' mathematical work; theorem and page
+  citations in the Blueprint identify the corresponding literature precisely.

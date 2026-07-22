@@ -1,0 +1,4 @@
+import BGS.NumberTheory.DivisorBound
+
+#print axioms BGS.NumberTheory.eventually_card_divisors_le_rpow
+#print axioms BGS.NumberTheory.exists_threshold_card_divisors_le_rpow
