@@ -2,7 +2,7 @@
   "challenge_module": "Comparator.Challenge",
   "solution_module": "Comparator.Solution",
   "theorem_names": [
-    "BGS.Markoff.reduction_surjective_of_explicitBound"
+    "Challenge.markoff_reduction_surjective_of_large_prime"
   ],
   "permitted_axioms": [
     "propext",

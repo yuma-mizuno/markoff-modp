@@ -46,22 +46,26 @@ The statement is formlized as
 ```lean4
 import Mathlib
 
-open CategoryTheory
+namespace Challenge
 
-def Markoff : CommSemiRingCat ⥤ Type where
-  obj R := {⟨x, y, z⟩ : R × R × R | x ^ 2 + y ^ 2 + z ^ 2 = 3 * x * y * z}
-  map f := ↾fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨f.hom x, f.hom y, f.hom z⟩, by
-    simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
+abbrev MarkoffNat :=
+  {⟨x, y, z⟩ : ℕ × ℕ × ℕ | x ^ 2 + y ^ 2 + z ^ 2 = 3 * x * y * z}
 
-theorem Markoff.reduction_surjective_of_explicitBound :
+abbrev MarkoffModp (p : ℕ) :=
+  {⟨x, y, z⟩ : ZMod p × ZMod p × ZMod p | x ^ 2 + y ^ 2 + z ^ 2 = 3 * x * y * z}
+
+abbrev markoffNatToModp (p : ℕ) : MarkoffNat → MarkoffModp p :=
+  fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨x, y, z⟩, by simpa using congrArg (fun n : ℕ ↦ (n : ZMod p)) h⟩
+
+theorem markoff_reduction_surjective_of_large_prime :
     let p₀ := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1
-    ∀ (p : ℕ), p.Prime → p₀ ≤ p →
-      Function.Surjective
-        (Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
+    ∀ (p : ℕ), p.Prime → p₀ ≤ p → Function.Surjective (markoffNatToModp p) := by
   sorry
+
+end Challenge
 ```
 and its proof is given as
-[`BGS.Markoff.reduction_surjective_of_explicitBound`](BGS/Markoff/Assembly/ReductionSurjectivity.lean).
+[`Comparator/Solution.lean`](Comparator/Solution.lean).
 
 The displayed cutoff is a 604-digit integer, approximately
 $2.6876853606811626\times 10^{603}$.  It formalizes the paper's preliminary
