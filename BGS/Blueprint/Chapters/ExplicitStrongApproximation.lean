@@ -2,9 +2,12 @@ import BGS.Blueprint.Chapters.ProofRoute
 import BGS.Markoff.ExplicitEndgame
 import BGS.Markoff.ExplicitEstimates
 import BGS.Markoff.ExplicitNumericCertificates
+import BGS.Markoff.PreliminaryEndgame
+import BGS.Markoff.PreliminaryNumerics
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.NumberTheory.ExplicitDivisorBound
+import BGS.NumberTheory.PreliminaryDivisorBound
 import Verso
 import VersoManual
 import VersoBlueprint
@@ -32,19 +35,24 @@ in the BGS method effective.  Their introduction first obtains connectivity
 above $`10^{532}`, then replaces the total-divisor count by maximal divisors
 and reports an optimized primorial/product cutoff.
 
-The formal route below is deliberately more conservative.  It sums over all
-divisors, proves a closed ninth-moment divisor estimate in Lean, and chooses
+The formal route below follows the preliminary all-divisors mechanism but
+replaces the paper's Nicolas and Euler-totient estimates by a fully elementary
+tenth-moment divisor bound.  Lean proves
 
 $$`
-  K_9=2^9(9^9)^{2^9},\qquad
-  p_0=2^9(48^3+1)^{18}K_9^8+1.
+  \tau(n)^{10}\le 2^{448}n,
+  \qquad K_{10}=2^{458},
+  \qquad p_0=2^{1837}(48^3+1)^{10}+1.
 `
 
-Thus this $`p_0` is explicit but is not the optimized preprint constant.  In
-particular, the formal theorem does not depend on a formalization of maximal
-divisors, the preprint's finite enumeration, or its Algorithm 1 certificate.
-
-:::lemma_ "explicit_elementary_divisor_bound" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.pow_succ_le_self_pow_mul_two_pow, BGS.NumberTheory.card_divisors_pow_le_explicit_constant_mul, BGS.Markoff.explicitDivisorMomentConstant, BGS.Markoff.explicitDivisorMomentConstant_eq, BGS.Markoff.explicit_divisor_sum_pow_nine_le") (tags := "proved-in-lean, explicit, arithmetic") (priority := "high")
+The actual sum of the prime-factor penalties is $`447`; the displayed divisor
+bound rounds this up to $`448`.  The resulting $`p_0` is approximately
+$`2.6876853606811626\times10^{603}`.  It is larger than the paper's preliminary
+$`10^{532}` threshold, because no Nicolas inequality or explicit lower bound
+for $`\varphi` is imported.  It is nevertheless far smaller than the former
+formal ninth-moment cutoff and formalizes the main all-divisors idea without
+using maximal divisors, the finite enumeration, or Algorithm 1.
+:::lemma_ "explicit_elementary_divisor_bound" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.preliminaryPrimePenalty, BGS.NumberTheory.card_divisors_pow_ten_le_preliminary_constant_mul, BGS.Markoff.preliminaryDivisorMomentConstant, BGS.Markoff.preliminaryDivisorMomentConstant_eq, BGS.Markoff.preliminary_divisor_sum_pow_ten_le") (tags := "proved-in-lean, explicit, arithmetic, paper-preliminary-route") (priority := "high")
 %%%
 source := {
   document := "eddy-fuchs-litman-martin-tripeny"
@@ -57,25 +65,29 @@ source := {
 }
 %%%
 
-For every positive natural number $`n`, the elementary factor-by-factor estimate gives
+For every positive natural number $`n`, the prime-factor penalty estimate gives
 
 $$`
-  \tau(n)^9\le (9^9)^{2^9}n.
+  \tau(n)^{10}\le 2^{448}n.
 `
 
-The convexity estimate for a ninth power then gives
-$`(\tau(p-1)+\tau(p+1))^9\le K_9p`.  This replaces the preprint's sharper
-analytic use of Nicolas' divisor bound by a larger but kernel-checked constant.
+Consequently, with $`T=\tau(p-1)+\tau(p+1)`, convexity gives
+$`T^{10}\le 2^{458}p`.  This is the elementary substitute for the paper's
+sharper analytic use of Nicolas' divisor bound.
 :::
 
 :::proof "explicit_elementary_divisor_bound"
-For every prime-power exponent $`a`, write $`a=9q+r` with $`r<9`.  Then
-$`a+1\le9(q+1)\le9\,2^q`.  Multiplying these inequalities over the prime
-factors of $`n` yields the displayed power bound.  Apply
-$`(x+y)^9\le2^8(x^9+y^9)` to the two divisor counts; the identity
-$`(p-1)+(p+1)=2p` supplies the remaining factor $`2` in $`K_9`.
+For a prime factor $`q` and exponent $`a`, Lean proves
+$`(a+1)^{10}\le 2^{e(q)}q^a`.  The penalty $`e(q)` decreases across the
+prime thresholds
+$`2,3,5,7,11,13,17,23,31,43,67,131,257,521,1024`; beyond $`1024` it is zero.
+Each band is a finite initial check followed by ratio induction.  A kernel-checked
+finite calculation proves that the penalties over all primes below $`1024`
+sum to $`447`, hence at most $`448`.  Multiplying over the prime factorization
+proves the displayed estimate.  Finally,
+$`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
+$`(p-1)+(p+1)=2p` give $`T^{10}\le2^{458}p`.
 :::
-
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
 Hasse--Weil theorem with coefficient $`8` and returns the fixed split error
@@ -95,33 +107,35 @@ $`100000+2\cdot256+10=100522`.  Thus no existentially chosen point-count
 constant remains on the explicit route.
 :::
 
-:::lemma_ "explicit_numeric_certificates" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound") (lean := "BGS.Markoff.explicitStrongApproximationCutoff, BGS.Markoff.explicitStrongApproximationCutoff_eq, BGS.Markoff.explicit_corvajaZannier_divisor_term_lt_rpow_one_div_six, BGS.Markoff.explicit_weighted_divisor_sum_sq_lt_rpow_one_div_three, BGS.Markoff.explicit_middleGame_corvajaZannier_linearBound, BGS.Markoff.explicit_four_lt_rpow_five_div_six, BGS.Markoff.explicit_endgamePrimitiveTrace_explicitInequality_of_card_sub_one, BGS.Markoff.explicit_endgamePrimitiveTrace_explicitInequality_of_card_add_one, BGS.Markoff.explicit_divisor_sum_lt_rpow_one_div_eight, BGS.Markoff.small_fixed_lt_rpow_one_div_eight_of_explicitCutoff, BGS.Markoff.explicit_cageWitness_explicitInequality, BGS.Markoff.explicit_lowOrder_divisorSensitive_cube") (tags := "proved-in-lean, explicit, numerical-certificate") (priority := "high")
-For $`p\ge p_0`, the divisor estimate and fixed coefficients discharge every
-real-power inequality used downstream.  In particular,
+:::lemma_ "explicit_numeric_certificates" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound") (lean := "BGS.Markoff.preliminaryStrongApproximationCutoff, BGS.Markoff.preliminaryStrongApproximationCutoff_eq, BGS.Markoff.preliminary_corvajaZannier_divisor_term_lt_rpow_one_div_six, BGS.Markoff.preliminary_weighted_divisor_sum_sq_lt_rpow_one_div_three, BGS.Markoff.preliminary_middleGame_corvajaZannier_linearBound, BGS.Markoff.preliminary_four_lt_rpow_five_div_six, BGS.Markoff.preliminary_endgamePrimitiveTrace_explicitInequality_of_card_sub_one, BGS.Markoff.preliminary_endgamePrimitiveTrace_explicitInequality_of_card_add_one, BGS.Markoff.preliminary_divisor_sum_lt_rpow_one_div_eight, BGS.Markoff.preliminary_small_fixed_lt_rpow_one_div_eight, BGS.Markoff.preliminary_cageWitness_explicitInequality, BGS.Markoff.preliminary_lowOrder_divisorSensitive_cube") (tags := "proved-in-lean, explicit, numerical-certificate, paper-preliminary-route") (priority := "high")
+For $`p\ge p_0`, the tenth-moment estimate and fixed coefficients discharge
+every real-power inequality used downstream.  In particular,
 $`48T<p^{1/6}` and $`68T^2<p^{1/3}`, where
 $`T=\tau(p-1)+\tau(p+1)`.  Consequently the linear middle-game inequality
 holds for every $`d<p^{5/6}`, and the endgame starts at $`p^{5/6}`.  The
-low-order certificate is adaptive: from
-$`p\le2(2+dT)^2` it deduces $`(48T)^3<d` directly, with no fixed lower power
-threshold.  The earlier estimates $`T<p^{1/8}` and
-$`100522<p^{1/8}` are retained for the cage argument.
+low-order certificate is adaptive: from $`p\le2(2+dT)^2` it deduces
+$`(48T)^3<d` directly.  The bounds $`T<p^{1/8}` and
+$`100522<p^{1/8}` supply the cage argument.
 :::
 
 :::proof "explicit_numeric_certificates"
-Write $`B=48^3+1`.  The ninth-moment estimate gives
-$`T^9\le K_9p`.  Thus
-$`(48T)^{18}\le48^{18}K_9^2p^2<p^3` and
-$`(68T^2)^9\le68^9K_9^2p^2<p^3`, proving the one-sixth and one-third bounds.
+Write $`B=48^3+1`, $`K=2^{458}`, and $`Q=2^{1837}B^{10}`.  The tenth-moment
+estimate gives $`T^{10}\le Kp`.  Hence
+$`(48T)^{60}<p^{10}` and $`(68T^2)^{30}<p^{10}`, proving the one-sixth and
+one-third bounds.
 
 For the adaptive implication, suppose instead that $`d\le(48T)^3`.  Since
-$`T\ge2`, the low-order count gives
-$`p\le2B^2T^8`.  Raising to the ninth power and then raising the moment
-estimate to the eighth power yields
-$`p^9\le2^9B^{18}K_9^8p^8<p^9`, a contradiction.  Finally,
-$`T^{72}\le K_9^8p^8<p^9` supplies the retained one-eighth-power cage bounds,
-together with the fixed-coefficient comparison at the same cutoff.
-:::
+$`T\ge2`, the low-order count gives $`p\le2B^2T^8`.  Raising to the tenth
+power and then using the eighth power of the moment estimate yields
 
+$$`
+  p^{10}\le 2^{10}B^{20}K^8p^8=Q^2p^8<p^{10},
+`
+
+a contradiction.  Likewise $`T^{80}\le K^8p^8\le Q^2p^8<p^{10}` gives the
+one-eighth-power divisor bound.  The fixed cage coefficient is handled by the
+same cutoff.
+:::
 :::theorem "explicit_middle_game_step" (parent := "explicit_strong_approximation") (uses := "weighted_trace_geometry, corvaja_zannier_existing_markoff_adapter, conic_rotation_orbits") (lean := "BGS.Markoff.corvajaZannierWeightedTraceBound, BGS.Markoff.exists_sameNormalizedComponent_maximalOrder_increase_of_directBounds") (tags := "proved-in-lean, explicit, middle-game, conditional-frontier") (priority := "high")
 Assume directly that $`(48T)^3<d`, $`48Td<p`, and
 $`d<p^{5/6}`, where $`T=\tau(p-1)+\tau(p+1)`.  A normalized Markoff point of
@@ -154,7 +168,7 @@ also separates the parabolic and trace-zero branches; every numerical premise
 is discharged by the closed certificate.
 :::
 
-:::theorem "explicit_cage_connectivity" (parent := "explicit_strong_approximation") (uses := "explicit_numeric_certificates, explicit_cage_hasse_estimates, conic_rotation_orbits") (lean := "BGS.Markoff.exists_splitMaximalFiberBridge_of_explicitInequality, BGS.Markoff.splitCage_connected_of_explicitInequality, BGS.Markoff.explicit_splitCage_connected, BGS.Markoff.exists_normalizedPunctured_splitCagePoint") (tags := "proved-in-lean, explicit, cage") (priority := "high")
+:::theorem "explicit_cage_connectivity" (parent := "explicit_strong_approximation") (uses := "explicit_numeric_certificates, explicit_cage_hasse_estimates, conic_rotation_orbits") (lean := "BGS.Markoff.exists_splitMaximalFiberBridge_of_explicitInequality, BGS.Markoff.splitCage_connected_of_explicitInequality, BGS.Markoff.preliminary_splitCage_connected, BGS.Markoff.exists_normalizedPunctured_splitCagePoint") (tags := "proved-in-lean, explicit, cage") (priority := "high")
 The coefficient-$`100522` witness estimate gives a primitive middle fiber
 between two maximal split fibers.  Fiber transitivity then connects the whole
 split cage.  This stage continues to use the retained one-eighth-power divisor
@@ -162,7 +176,7 @@ and fixed-coefficient estimates.  Lean also constructs the punctured cage
 point used as the base of the final maximal-orbit argument.
 :::
 
-:::theorem "explicit_large_order_to_cage" (parent := "explicit_strong_approximation") (uses := "explicit_primitive_trace_endgame, explicit_cage_connectivity") (lean := "BGS.Markoff.exists_explicit_sameComponent_maximalRotation_of_large_firstCoordinate, BGS.Markoff.exists_explicit_sameComponent_splitCage_of_large_firstCoordinate, BGS.Markoff.exists_explicit_sameComponent_splitCage_of_some_largeCoordinate, BGS.Markoff.explicit_sameNormalizedComponent_of_largeOrder_to_splitCage") (tags := "proved-in-lean, explicit, cross-stage-composition") (priority := "high")
+:::theorem "explicit_large_order_to_cage" (parent := "explicit_strong_approximation") (uses := "explicit_primitive_trace_endgame, explicit_cage_connectivity") (lean := "BGS.Markoff.exists_preliminary_sameComponent_maximalRotation_of_large_firstCoordinate, BGS.Markoff.exists_preliminary_sameComponent_splitCage_of_large_firstCoordinate, BGS.Markoff.exists_preliminary_sameComponent_splitCage_of_some_largeCoordinate, BGS.Markoff.preliminary_sameNormalizedComponent_of_largeOrder_to_splitCage") (tags := "proved-in-lean, explicit, cross-stage-composition") (priority := "high")
 Every point with some coordinate order at least $`p^{5/6}` lies in the
 component of the chosen split cage.  This node is only the explicit endgame
 and cage composition; the Corvaja--Zannier middle-game step remains a separate
@@ -205,7 +219,7 @@ final explicit theorem is attached separately only after Lean instantiates
 all three packages from the certificate and endgame declarations above.
 :::
 
-:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_explicitCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concreteExplicitBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity") (priority := "high")
+:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_preliminaryCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity") (priority := "high")
 %%%
 source := {
   document := "eddy-fuchs-litman-martin-tripeny"
@@ -225,12 +239,11 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^9(48^3+1)^{18}
-    \left(2^9(9^9)^{2^9}\right)^8+1\le p,
+  2^{1837}(48^3+1)^{10}+1\le p,
 `
 
 the action of $`\Gamma` on $`X^*(\mathbb F_p)` is transitive.  The declaration
-`BGS.Markoff.puncturedMarkoffTransitiveAt_of_concreteExplicitBound` exposes this raw
+`BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound` exposes this raw
 natural-number expression in its hypothesis; no unfolding of an opaque
 constant is required by clients.
 :::
@@ -265,8 +278,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^9(48^3+1)^{18}
-    \left(2^9(9^9)^{2^9}\right)^8+1\le p,
+  2^{1837}(48^3+1)^{10}+1\le p,
 `
 
 coordinatewise reduction is surjective:
@@ -306,10 +318,16 @@ reduction map.  Applying the first equivalence to the explicit transitivity
 theorem gives the stated public endpoint.
 :::
 
-The preprint improves the first $`10^{532}` cutoff by replacing total divisors
+The paper's Corollary 2.5 proves the sharper preliminary threshold
+$`p>10^{532}` by applying Nicolas' explicit upper bound to
+$`T_d\le\tau(p-1)+\tau(p+1)` and an explicit lower bound for
+$`\varphi(p\pm1)`.  It then improves this further by replacing total divisors
 with maximal divisors and running a finite search over reduced integers.
 
-That optimization is source context, not a hidden premise of the Lean graph.
-The formal graph stays on the all-divisor certificate route all the way to its
-explicit endpoint; it makes no claim that the preprint's computer-generated
-primorial/product certificate has been reproduced.
+Those two optimizations are source context, not hidden premises of the Lean
+graph.  The formal endpoint follows the paper's all-divisors
+Corvaja--Zannier/maximal-bad-orbit architecture, but closes its numerical
+obligations with the elementary tenth-moment estimate above.  It therefore
+claims the larger displayed cutoff and makes no claim that either Nicolas'
+analytic estimate or the computer-generated primorial/product certificate has
+been formalized.

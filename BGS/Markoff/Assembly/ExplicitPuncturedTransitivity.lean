@@ -2,6 +2,7 @@ import BGS.Markoff.Assembly.GiantOrbit
 import BGS.Markoff.Assembly.OrbitDivisibility
 import BGS.Markoff.ExplicitEndgame
 import BGS.Markoff.ExplicitNumericCertificates
+import BGS.Markoff.PreliminaryEndgame
 
 /-!
 # Explicit punctured transitivity
@@ -250,6 +251,72 @@ theorem puncturedMarkoffTransitiveAt_of_concreteExplicitBound
   simpa only [explicitStrongApproximationCutoff_eq,
     explicitDivisorMomentConstant_eq] using hp
 
+private theorem preliminaryCutoff_seven_le_for_assembly
+    {p : ℕ} [Fact p.Prime]
+    (hp : preliminaryStrongApproximationCutoff ≤ p) : 7 ≤ p := by
+  have hpOne : (1 : ℝ) ≤ p := by
+    exact_mod_cast (preliminaryCutoff_gt_one.trans_le hp).le
+  have hrootLe : (p : ℝ) ^ (1 / 8 : ℝ) ≤ p := by
+    simpa using
+      Real.rpow_le_self_of_one_le hpOne (by norm_num : (1 / 8 : ℝ) ≤ 1)
+  have hfiveRoot : (5 : ℝ) < (p : ℝ) ^ (1 / 8 : ℝ) :=
+    preliminary_small_fixed_lt_rpow_one_div_eight hp (by norm_num)
+  have hfive : 5 < p := by
+    exact_mod_cast hfiveRoot.trans_le hrootLe
+  have hpSix : p ≠ 6 := by
+    intro hpEq
+    subst p
+    have hprime : Nat.Prime 6 := Fact.out
+    norm_num at hprime
+  omega
+/-- **Elementary preliminary-route punctured transitivity.**  This is the
+paper's all-divisors Corvaja--Zannier route with the analytic Nicolas estimate
+replaced by the fully formalized elementary tenth-moment divisor bound. -/
+theorem puncturedMarkoffTransitiveAt_of_preliminaryCutoff
+    (p : ℕ) (hpPrime : p.Prime)
+    (hp : preliminaryStrongApproximationCutoff ≤ p) :
+    PuncturedMarkoffTransitiveAt p hpPrime := by
+  letI : Fact p.Prime := ⟨hpPrime⟩
+  have hpSeven : 7 ≤ p := preliminaryCutoff_seven_le_for_assembly hp
+  have hpThree : 3 < p := by omega
+  have hthree : (3 : ZMod p) ≠ 0 := by
+    intro hzero
+    have hpDvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
+    exact (Nat.not_dvd_of_pos_of_lt (by omega) hpThree) hpDvd
+  letI : Invertible (3 : ZMod p) := invertibleOfNonzero hthree
+  obtain ⟨baseNormalized, hbaseCage⟩ :=
+    exists_normalizedPunctured_splitCagePoint p hpSeven
+  let base : PuncturedMarkoffSurface (ZMod p) :=
+    (puncturedNormalizationEquiv (ZMod p)).symm baseNormalized
+  apply puncturedMarkoffTransitiveAt_of_maximalOrbit_frontier p hpThree base
+  · intro d hdPos hpLe
+    exact preliminary_lowOrder_divisorSensitive_cube hp hdPos hpLe
+  · intro d hUpper
+    exact preliminary_middleGame_corvajaZannier_linearBound hp hUpper
+  · intro z hzLarge
+    have hcoordinate :
+        (p : ℝ) ^ (5 / 6 : ℝ) ≤ rotationOrder z.1.u1 ∨
+        (p : ℝ) ^ (5 / 6 : ℝ) ≤ rotationOrder z.1.u2 ∨
+        (p : ℝ) ^ (5 / 6 : ℝ) ≤ rotationOrder z.1.u3 := by
+      by_contra hsmall
+      push_neg at hsmall
+      have hmaxSmall : (maximalCoordinateRotationOrder z.1 : ℝ) <
+          (p : ℝ) ^ (5 / 6 : ℝ) := by
+        rw [maximalCoordinateRotationOrder, Nat.cast_max, Nat.cast_max]
+        exact max_lt hsmall.1 (max_lt hsmall.2.1 hsmall.2.2)
+      exact (not_lt_of_ge hzLarge) hmaxSmall
+    have hcomponent :=
+      preliminary_sameNormalizedComponent_of_largeOrder_to_splitCage
+        hp (normalizedSurfaceOfPunctured baseNormalized) z hbaseCage hcoordinate
+    simpa [base, normalizedPuncturedPoint] using hcomponent
+
+/-- Raw-expression form of the elementary preliminary-route endpoint. -/
+theorem puncturedMarkoffTransitiveAt_of_concretePreliminaryBound
+    (p : ℕ) (hpPrime : p.Prime)
+    (hp : (2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
+    PuncturedMarkoffTransitiveAt p hpPrime := by
+  apply puncturedMarkoffTransitiveAt_of_preliminaryCutoff p hpPrime
+  simpa only [preliminaryStrongApproximationCutoff_eq] using hp
 end
 
 end BGS.Markoff

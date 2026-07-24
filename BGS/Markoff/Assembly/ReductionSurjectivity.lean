@@ -20,15 +20,25 @@ theorem markoffReduction_surjective_of_concreteExplicitBound
   (puncturedMarkoffTransitiveAt_iff_markoffReduction_surjective p hpPrime).mp
     (puncturedMarkoffTransitiveAt_of_concreteExplicitBound p hpPrime hp)
 
-/-- The explicit theorem in the public functor presentation used by the Comparator challenge. -/
+/-- Strong approximation obtained from the elementary preliminary route. -/
+theorem markoffReduction_surjective_of_concretePreliminaryBound
+    (p : ℕ) (hpPrime : p.Prime)
+    (hp : (2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
+    Function.Surjective (markoffReduction p) :=
+  (puncturedMarkoffTransitiveAt_iff_markoffReduction_surjective p hpPrime).mp
+    (puncturedMarkoffTransitiveAt_of_concretePreliminaryBound p hpPrime hp)
+
+/-- The elementary preliminary-route theorem in the public functor
+presentation used by the Comparator challenge. -/
 theorem reduction_surjective_of_explicitBound :
-    let p₀ := 2 ^ 9 * (48 ^ 3 + 1) ^ 18 * (2 ^ 9 * (9 ^ 9) ^ (2 ^ 9)) ^ 8 + 1
+    let p₀ := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (BGS.Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
   dsimp only
   intro p hpPrime hp y
-  obtain ⟨x, hx⟩ := markoffReduction_surjective_of_concreteExplicitBound p hpPrime hp
+  obtain ⟨x, hx⟩ :=
+    markoffReduction_surjective_of_concretePreliminaryBound p hpPrime hp
     (markoffEquivSemiringMarkoffSurface (ZMod p) y)
   refine ⟨(markoffEquivSemiringMarkoffSurface ℕ).symm x, ?_⟩
   apply (markoffEquivSemiringMarkoffSurface (ZMod p)).injective

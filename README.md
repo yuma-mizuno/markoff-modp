@@ -29,8 +29,7 @@ For a commutative semiring $R$, define the Markoff surface by
 Let
 
 ```math
-p_0 = 2^9(48^3+1)^{18}
-      \left(2^9(9^9)^{2^9}\right)^8+1.
+p_0 = 2^{1837}(48^3+1)^{10}+1.
 ```
 
 **Theorem** (Strong approximation for large primes). For every prime $p$ with $p_0 \le p$, the map
@@ -55,14 +54,22 @@ def Markoff : CommSemiRingCat ⥤ Type where
     simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
 
 theorem Markoff.reduction_surjective_of_explicitBound :
-    let p₀ := 2 ^ 9 * (48 ^ 3 + 1) ^ 18 * (2 ^ 9 * (9 ^ 9) ^ (2 ^ 9)) ^ 8 + 1
+    let p₀ := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
   sorry
 ```
 and its proof is given as
-[`BGS.Markoff.reduction_surjective_of_explicitBound`](BGS/Markoff/Assembly/ReductionSurjectivity.lean#L24-L35).
+[`BGS.Markoff.reduction_surjective_of_explicitBound`](BGS/Markoff/Assembly/ReductionSurjectivity.lean).
+
+The displayed cutoff is a 604-digit integer, approximately
+$2.6876853606811626\times 10^{603}$.  It formalizes the paper's preliminary
+all-divisors Corvaja--Zannier route with the fully elementary estimate
+$\tau(n)^{10}\le 2^{448}n$.  The paper's sharper preliminary threshold
+$p>10^{532}$ instead uses Nicolas' explicit divisor bound and an explicit
+Euler-totient estimate; those analytic numerical estimates are not imported
+into this formal endpoint.
 
 ## Improving the cutoff
 

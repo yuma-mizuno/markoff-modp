@@ -83,7 +83,7 @@ status:
     selected BGS route to finite-field transitivity, culminating in explicit
     surjectivity of reduction from natural solutions to solutions modulo every
     prime at least
-    2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1. Supporting results
+    2^1837 * (48^3 + 1)^10 + 1. Supporting results
     include the giant-orbit theorem, eventual and explicit transitivity, the
     exceptional-prime estimate, and the Corvaja-Zannier and affine Hasse-Weil
     inputs used on that route.
@@ -142,10 +142,11 @@ fidelity:
     semirings, and
     the public endpoint includes both the natural and modular origins. The
     explicit endpoint uses an elementary
-    ninth-moment all-divisor estimate and the adaptive cutoff
-    `2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1`; it deliberately differs from the optimized
-    primorial/product cutoff in arXiv:2308.07579 and does not import that
-    preprint's finite Algorithm 1 certificate. Exact source provenance and
+    tenth-moment prime-penalty all-divisor estimate and the adaptive cutoff
+    `2^1837 * (48^3 + 1)^10 + 1`; it deliberately differs from the
+    paper's Nicolas-based preliminary threshold `10^532` and from the optimized
+    primorial/product cutoff in arXiv:2308.07579. It imports neither the Nicolas
+    and Euler-totient estimates nor the preprint's finite Algorithm 1 certificate. Exact source provenance and
     historical alternatives are recorded in the Blueprint.
 
 review:
@@ -174,7 +175,7 @@ alignment:
       note: >-
         The coordinatewise map from natural Markoff solutions to Markoff
         solutions modulo p is surjective for primes at least
-        2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1. The formal bridge
+        2^1837 * (48^3 + 1)^10 + 1. The formal bridge
         proves this reduction statement equivalent to finite-field
         transitivity, with natural connectivity used in the reverse direction.
 
@@ -191,13 +192,14 @@ alignment:
       note: "Combines BGS Theorem 1 with Chen's component-cardinality divisibility theorem, proved in Lean via Martin's later elementary proof, then applies the natural-connectivity bridge from punctured transitivity to reduction surjectivity. Chen first obtained strong approximation for all sufficiently large primes from this divisibility result."
 
     - source: "Eddy--Fuchs--Litman--Martin--Tripeny explicit-connectivity method"
-      lean: "BGS.Markoff.puncturedMarkoffTransitiveAt_of_concreteExplicitBound"
+      lean: "BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound"
       module: "BGS.Markoff.Assembly.ExplicitPuncturedTransitivity"
       status: "proved"
       note: >-
         Proves transitivity for primes at least
-        2^9 * (48^3 + 1)^18 * (2^9 * (9^9)^(2^9))^8 + 1 by an adaptive all-divisor route. This is intentionally
-        not the optimized primorial/product constant of the preprint and does
+        2^1837 * (48^3 + 1)^10 + 1 by a tenth-moment adaptive all-divisor route. This is intentionally larger
+        than the paper's Nicolas-based `10^532` preliminary threshold and is
+        not the optimized primorial/product constant of the preprint. It does
         not claim to verify its Algorithm 1 output.
 
     - source: "Bourgain-Gamburd-Sarnak, Theorem 2"
