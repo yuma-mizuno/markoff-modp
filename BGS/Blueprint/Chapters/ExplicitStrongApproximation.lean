@@ -7,6 +7,7 @@ import BGS.Markoff.PreliminaryNumerics
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.Markoff.Assembly.RankinWidthEnvelope
+import BGS.Markoff.Assembly.RankinJointAntichainWidth
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
 import BGS.NumberTheory.RankinCutoff1248Profile
@@ -147,6 +148,19 @@ This is a strict architectural improvement over the all-divisors endpoint:
 a joint-antichain or symmetric-chain certificate can be inserted without
 changing the analytic proof.  This node proves the width-sensitive endpoint;
 it does not yet claim a numerical width certificate or the cutoff 2^1248.
+:::
+:::lemma_ "rankin_joint_antichain_width" (parent := "explicit_strong_approximation") (uses := "rankin_width_sensitive_endpoint") (lean := "BGS.Markoff.nontrivialMiddleGameMaximalOrders_subset_divisors_sq_sub_one, BGS.Markoff.nontrivialMiddleGameMaximalOrders_isAntichain, BGS.Markoff.middleGameMaximalOrders_card_le_nontrivial_add_two, BGS.Markoff.bound_le_rankinJointAntichainWitnessCap, BGS.Markoff.prime_le_of_matching_rankinNeighborProfile_jointAntichainWidth_leaf") (tags := "proved-in-lean, explicit, joint-antichain, width-sensitive, rankin-envelope") (priority := "high")
+The maximal candidate orders from p-1 and p+1 form one divisor family, not
+two independent families.  Every member divides p^2-1.  After removing the
+possible divisors 1 and 2, Lean proves that the union is an antichain: in a
+cross-side divisibility relation the smaller member divides both neighbors
+and hence their difference 2.
+
+Consequently the full maximal-order count is at most the width of this single
+nontrivial antichain plus two.  The new theorem feeds that quantity directly
+into the width-sensitive Rankin endpoint.  The remaining numerical task is
+to certify a sharp width bound for this antichain over the finite 2^1248
+profile domain.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
