@@ -145,5 +145,4 @@ import BGS.Markoff.Cage
 import BGS.Markoff.Incidence
 import BGS.Markoff.Assembly
 import BGS.Markoff.Diophantine
-import BGS.NumberTheory.RankinCutoff1248Skeleton
-import BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
+import BGS.NumberTheory.RankinCutoff1248Profile

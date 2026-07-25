@@ -8,8 +8,7 @@ import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
-import BGS.NumberTheory.RankinCutoff1248Skeleton
-import BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
+import BGS.NumberTheory.RankinCutoff1248Profile
 import Verso
 import VersoManual
 import VersoBlueprint
@@ -123,6 +122,18 @@ coverage theorem must exhibit a dominating row for every actual profile.
 Thus numerical checking and mathematical exhaustiveness remain distinct.
 The final exact-order wrapper is proved, but no concrete exhaustive summary
 list for 2^1248 is claimed at this node.
+:::
+:::lemma_ "rankin_actual_profile_handoff" (parent := "explicit_strong_approximation") (uses := "rankin_1248_finite_domain, rankin_scalar_summary_certificates") (lean := "BGS.NumberTheory.RankinExponentSkeleton.jointEnvelopeRootCap, BGS.NumberTheory.RankinExponentSkeleton.certifiedProfile_jointEnvelopeValid, BGS.NumberTheory.actualRankinProfile1248_matches, BGS.NumberTheory.actualRankinProfile1248_valid, BGS.NumberTheory.actualRankinSkeletonSummary1248_dominates") (tags := "proved-in-lean, explicit, semantic-handoff, conditional-route, rankin-envelope") (priority := "high")
+Each actual exponent skeleton now chooses one more than the integral twelfth
+root of its joint witness cap.  Lean proves that this canonical choice is
+positive and satisfies the Rankin root obligation.  For every prime below
+2^1248 the resulting side-assigned positional profile is therefore valid and
+matches the factorizations of p-1 and p+1.
+
+Erasing the side labels gives exactly the certified skeleton profile, so its
+two-scalar summary dominates the actual profile.  This closes the semantic
+handoff from primes to generated summary rows; only the genuinely exhaustive
+arithmetic cover remains open.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
