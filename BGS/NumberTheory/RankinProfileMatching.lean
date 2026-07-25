@@ -337,6 +337,190 @@ theorem RankinNeighborProfile.jointDivisorCount_eq_neighborCards
     ⟨hminus, hplus⟩
   simp [RankinNeighborProfile.jointDivisorCount, hminus, hplus]
 
+private theorem oddLowerNeighborProduct_map_assignment_le
+    (p : ℕ) (side : NeighborSide)
+    (primes : List ℕ) (assignment : ℕ → RankinOddFactor)
+    (hmatch :
+      ∀ prime ∈ primes, (assignment prime).Matches p prime) :
+    RankinNeighborProfile.oddLowerNeighborProduct side
+        (primes.map assignment) ≤
+      (primes.map fun prime =>
+        if actualNeighborSide p prime = side then
+          prime ^ actualNeighborExponent p prime
+        else 1).prod := by
+  induction primes with
+  | nil => simp [RankinNeighborProfile.oddLowerNeighborProduct]
+  | cons prime primes ih =>
+      have hhead := hmatch prime (by simp)
+      have htail :
+          ∀ q ∈ primes, (assignment q).Matches p q := by
+        intro q hq
+        exact hmatch q (by simp [hq])
+      simp only [List.map_cons,
+        RankinNeighborProfile.oddLowerNeighborProduct,
+        List.prod_cons]
+      rw [hhead.1, hhead.2.1]
+      by_cases hside : actualNeighborSide p prime = side
+      · simp only [hside, if_pos]
+        exact Nat.mul_le_mul
+          (Nat.pow_le_pow_left hhead.2.2 _)
+          (ih htail)
+      · simpa [hside] using ih htail
+
+private theorem jointOddPrimeList_power_product_minus
+    (p : ℕ) :
+    ((jointOddPrimeList p).map fun prime =>
+      if actualNeighborSide p prime = .minus then
+        prime ^ actualNeighborExponent p prime
+      else 1).prod =
+      ∏ prime ∈ (p - 1).primeFactors.erase 2,
+        prime ^ (p - 1).factorization prime := by
+  rw [jointOddPrimeList_map_prod]
+  symm
+  calc
+    (∏ prime ∈ (p - 1).primeFactors.erase 2,
+        prime ^ (p - 1).factorization prime) =
+        ∏ prime ∈ (p - 1).primeFactors.erase 2,
+          (if actualNeighborSide p prime = .minus then
+            prime ^ actualNeighborExponent p prime
+          else 1) := by
+      apply Finset.prod_congr rfl
+      intro prime hprime
+      have hminus : prime ∈ (p - 1).primeFactors :=
+        Finset.mem_of_mem_erase hprime
+      simp [actualNeighborSide, actualNeighborExponent, hminus]
+    _ = ∏ prime ∈ jointOddPrimeSupport p,
+          (if actualNeighborSide p prime = .minus then
+            prime ^ actualNeighborExponent p prime
+          else 1) := by
+      apply Finset.prod_subset
+      · intro prime hprime
+        exact Finset.mem_erase.mpr
+          ⟨(Finset.mem_erase.mp hprime).1,
+            Finset.mem_union_left _ (Finset.mem_of_mem_erase hprime)⟩
+      · intro prime hsupport hnot
+        have hodd : prime ≠ 2 := (Finset.mem_erase.mp hsupport).1
+        have hnotMinus : prime ∉ (p - 1).primeFactors := by
+          intro hminus
+          exact hnot (Finset.mem_erase.mpr ⟨hodd, hminus⟩)
+        simp [actualNeighborSide, hnotMinus]
+
+private theorem jointOddPrimeList_power_product_plus
+    (p : ℕ) (hp : 1 < p) :
+    ((jointOddPrimeList p).map fun prime =>
+      if actualNeighborSide p prime = .plus then
+        prime ^ actualNeighborExponent p prime
+      else 1).prod =
+      ∏ prime ∈ (p + 1).primeFactors.erase 2,
+        prime ^ (p + 1).factorization prime := by
+  rw [jointOddPrimeList_map_prod]
+  symm
+  calc
+    (∏ prime ∈ (p + 1).primeFactors.erase 2,
+        prime ^ (p + 1).factorization prime) =
+        ∏ prime ∈ (p + 1).primeFactors.erase 2,
+          (if actualNeighborSide p prime = .plus then
+            prime ^ actualNeighborExponent p prime
+          else 1) := by
+      apply Finset.prod_congr rfl
+      intro prime hprime
+      have hplus : prime ∈ (p + 1).primeFactors :=
+        Finset.mem_of_mem_erase hprime
+      have hodd : prime ≠ 2 := (Finset.mem_erase.mp hprime).1
+      have hnotMinus : prime ∉ (p - 1).primeFactors := by
+        intro hminus
+        exact odd_prime_not_mem_both_neighbors hp hodd hminus hplus
+      simp [actualNeighborSide, actualNeighborExponent, hnotMinus]
+    _ = ∏ prime ∈ jointOddPrimeSupport p,
+          (if actualNeighborSide p prime = .plus then
+            prime ^ actualNeighborExponent p prime
+          else 1) := by
+      apply Finset.prod_subset
+      · intro prime hprime
+        exact Finset.mem_erase.mpr
+          ⟨(Finset.mem_erase.mp hprime).1,
+            Finset.mem_union_right _ (Finset.mem_of_mem_erase hprime)⟩
+      · intro prime hsupport hnot
+        have hodd : prime ≠ 2 := (Finset.mem_erase.mp hsupport).1
+        have hnotPlus : prime ∉ (p + 1).primeFactors := by
+          intro hplus
+          exact hnot (Finset.mem_erase.mpr ⟨hodd, hplus⟩)
+        have hminus : prime ∈ (p - 1).primeFactors := by
+          rcases Finset.mem_union.mp
+              (Finset.mem_of_mem_erase hsupport) with hminus | hplus
+          · exact hminus
+          · exact False.elim (hnotPlus hplus)
+        simp [actualNeighborSide, hminus]
+
+/-- Matching profiles give genuine lower bounds for both neighboring
+integers. -/
+theorem RankinNeighborProfile.lowerNeighborProducts_le
+    {p : ℕ} (hpPrime : p.Prime) (hpTwo : 2 < p)
+    {profile : RankinNeighborProfile}
+    (hmatch : profile.Matches p) :
+    profile.lowerNeighborProduct .minus ≤ p - 1 ∧
+      profile.lowerNeighborProduct .plus ≤ p + 1 := by
+  rcases hmatch with
+    ⟨hminusTwo, hplusTwo, assignment, hlist, hoddMatch⟩
+  have hp : 1 < p := by omega
+  have hpOdd : p % 2 = 1 :=
+    hpPrime.eq_two_or_odd.resolve_left (by omega)
+  have hminusNe : p - 1 ≠ 0 := by omega
+  have hplusNe : p + 1 ≠ 0 := by omega
+  have htwoMinus : 2 ∈ (p - 1).primeFactors := by
+    apply Nat.prime_two.mem_primeFactors _ hminusNe
+    omega
+  have htwoPlus : 2 ∈ (p + 1).primeFactors := by
+    apply Nat.prime_two.mem_primeFactors _ hplusNe
+    omega
+  constructor
+  · simp only [RankinNeighborProfile.lowerNeighborProduct,
+      RankinNeighborProfile.twoExponent, hminusTwo, hlist]
+    calc
+      2 ^ (p - 1).factorization 2 *
+          RankinNeighborProfile.oddLowerNeighborProduct .minus
+            ((jointOddPrimeList p).map assignment) ≤
+        2 ^ (p - 1).factorization 2 *
+          ((jointOddPrimeList p).map fun prime =>
+            if actualNeighborSide p prime = .minus then
+              prime ^ actualNeighborExponent p prime
+            else 1).prod :=
+        Nat.mul_le_mul_left _
+          (oddLowerNeighborProduct_map_assignment_le
+            p .minus (jointOddPrimeList p) assignment hoddMatch)
+      _ = 2 ^ (p - 1).factorization 2 *
+          ∏ prime ∈ (p - 1).primeFactors.erase 2,
+            prime ^ (p - 1).factorization prime := by
+        rw [jointOddPrimeList_power_product_minus p]
+      _ = ∏ prime ∈ (p - 1).primeFactors,
+            prime ^ (p - 1).factorization prime :=
+        Finset.mul_prod_erase (p - 1).primeFactors
+          (fun prime => prime ^ (p - 1).factorization prime) htwoMinus
+      _ = p - 1 := (Nat.prod_primeFactors_pow_factorization hminusNe).symm
+  · simp only [RankinNeighborProfile.lowerNeighborProduct,
+      RankinNeighborProfile.twoExponent, hplusTwo, hlist]
+    calc
+      2 ^ (p + 1).factorization 2 *
+          RankinNeighborProfile.oddLowerNeighborProduct .plus
+            ((jointOddPrimeList p).map assignment) ≤
+        2 ^ (p + 1).factorization 2 *
+          ((jointOddPrimeList p).map fun prime =>
+            if actualNeighborSide p prime = .plus then
+              prime ^ actualNeighborExponent p prime
+            else 1).prod :=
+        Nat.mul_le_mul_left _
+          (oddLowerNeighborProduct_map_assignment_le
+            p .plus (jointOddPrimeList p) assignment hoddMatch)
+      _ = 2 ^ (p + 1).factorization 2 *
+          ∏ prime ∈ (p + 1).primeFactors.erase 2,
+            prime ^ (p + 1).factorization prime := by
+        rw [jointOddPrimeList_power_product_plus p hp]
+      _ = ∏ prime ∈ (p + 1).primeFactors,
+            prime ^ (p + 1).factorization prime :=
+        Finset.mul_prod_erase (p + 1).primeFactors
+          (fun prime => prime ^ (p + 1).factorization prime) htwoPlus
+      _ = p + 1 := (Nat.prod_primeFactors_pow_factorization hplusNe).symm
+
 private theorem oddCoarseEulerProduct_map_assignment
     (p : ℕ) (side : NeighborSide)
     (primes : List ℕ) (assignment : ℕ → RankinOddFactor)

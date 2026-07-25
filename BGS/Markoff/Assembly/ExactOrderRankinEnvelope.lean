@@ -239,6 +239,7 @@ theorem prime_le_of_rankinNeighborProfile_closes
         profile.jointCoarseEulerProduct) ^ 2 <
           (8 * (cutoff + 1) : ℚ) := by
     simpa only [RankinNeighborProfile.ClosesCutoff,
+      RankinNeighborProfile.failureSquare,
       Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat,
       Nat.cast_one] using hcloses
   exact (not_lt_of_ge (hcutoffCast.trans hprofileSquare)) hclosesCast
@@ -285,5 +286,136 @@ theorem prime_le_of_matching_rankinNeighborProfile_closes
         profile.coarseEulerProduct .minus +
           profile.coarseEulerProduct .plus
     exact add_le_add hminusEuler hplusEuler
+
+/-- The exact-order obstruction forces the profile failure square itself,
+after both semantic bounds have been discharged by matching. -/
+theorem eight_mul_prime_cast_le_matching_profile_failureSquare
+    {p bound : ℕ}
+    (hpPrime : p.Prime) (hpTwo : 2 < p)
+    (hroot :
+      8 * p ≤ (combinedTruncatedOrderTotientSum p bound) ^ 2)
+    (hboundWitness :
+      bound ≤ 189 * (middleGameMaximalOrders p bound).card ^ 3)
+    (profile : RankinNeighborProfile)
+    (hprofile : profile.Valid)
+    (hmatch : profile.Matches p) :
+    (8 * p : ℚ) ≤ profile.failureSquare := by
+  have hp : 1 < p := by omega
+  obtain ⟨assignment, hweightNonneg, hweightPower,
+      hminusEuler, hplusEuler⟩ :=
+    profile.exists_assignedPrimeWeight_bounds
+      hpPrime hpTwo hprofile hmatch
+  have hdivisorEq :=
+    profile.jointDivisorCount_eq_neighborCards
+      hpPrime hpTwo hmatch
+  have hboundJoint := bound_le_jointDivisorCube hboundWitness
+  have hboundProfile : bound ≤ profile.witnessCap := by
+    apply hboundJoint.trans
+    simp only [RankinNeighborProfile.witnessCap]
+    gcongr
+    change
+      (p - 1).divisors.card + (p + 1).divisors.card ≤
+        profile.jointDivisorCount
+    exact le_of_eq hdivisorEq.symm
+  have hrootCapNonneg : (0 : ℚ) ≤ profile.rootCap := by positivity
+  have hwitnessCapCast :
+      (profile.witnessCap : ℚ) ≤ (profile.rootCap : ℚ) ^ 12 := by
+    exact_mod_cast hprofile.2.2.2.2.2.2
+  have hfailure :=
+    eight_mul_prime_cast_le_jointRankinSquare
+      hp hroot hboundProfile
+      (assignedPrimeWeight p profile assignment) profile.rootCap
+      hweightNonneg hweightPower hrootCapNonneg hwitnessCapCast
+  have hEuler :
+      jointRankinEulerProduct p
+          (assignedPrimeWeight p profile assignment) ≤
+        profile.jointCoarseEulerProduct := by
+    exact add_le_add hminusEuler hplusEuler
+  have hEulerActualNonneg :=
+    jointRankinEulerProduct_nonneg p hp
+      (assignedPrimeWeight p profile assignment) hweightNonneg
+  have hEulerProfileNonneg :
+      (0 : ℚ) ≤ profile.jointCoarseEulerProduct :=
+    hEulerActualNonneg.trans hEuler
+  have hscaleNonneg :
+      (0 : ℚ) ≤ (profile.witnessCap : ℚ) * profile.rootCap := by
+    positivity
+  have hupper :
+      (profile.witnessCap : ℚ) * profile.rootCap *
+          jointRankinEulerProduct p
+            (assignedPrimeWeight p profile assignment) ≤
+        (profile.witnessCap : ℚ) * profile.rootCap *
+          profile.jointCoarseEulerProduct :=
+    mul_le_mul_of_nonneg_left hEuler hscaleNonneg
+  have hleftNonneg :
+      (0 : ℚ) ≤
+        (profile.witnessCap : ℚ) * profile.rootCap *
+          jointRankinEulerProduct p
+            (assignedPrimeWeight p profile assignment) := by
+    positivity
+  have hrightNonneg :
+      (0 : ℚ) ≤
+        (profile.witnessCap : ℚ) * profile.rootCap *
+          profile.jointCoarseEulerProduct := by
+    positivity
+  simpa only [RankinNeighborProfile.failureSquare] using
+    hfailure.trans ((sq_le_sq₀ hleftNonneg hrightNonneg).2 hupper)
+
+/-- A checked lower-product exclusion cannot coexist with the exact-order
+failure obstruction. -/
+theorem false_of_matching_rankinNeighborProfile_excludes
+    {p bound : ℕ}
+    (hpPrime : p.Prime) (hpTwo : 2 < p)
+    (hroot :
+      8 * p ≤ (combinedTruncatedOrderTotientSum p bound) ^ 2)
+    (hboundWitness :
+      bound ≤ 189 * (middleGameMaximalOrders p bound).card ^ 3)
+    (profile : RankinNeighborProfile)
+    (hprofile : profile.Valid)
+    (hmatch : profile.Matches p)
+    (hexcludes : profile.ExcludesFailure) : False := by
+  have hfailure :=
+    eight_mul_prime_cast_le_matching_profile_failureSquare
+      hpPrime hpTwo hroot hboundWitness profile hprofile hmatch
+  have hlower :=
+    profile.lowerNeighborProducts_le hpPrime hpTwo hmatch
+  rcases hexcludes with hminus | hplus
+  · have hlowerPrime :
+        profile.lowerNeighborProduct .minus + 1 ≤ p := by omega
+    have hlowerCast :
+        (((8 * (profile.lowerNeighborProduct .minus + 1) : ℕ) : ℚ)) ≤
+          (8 * p : ℚ) := by
+      exact_mod_cast Nat.mul_le_mul_left 8 hlowerPrime
+    exact (not_lt_of_ge (hlowerCast.trans hfailure)) hminus
+  · have hlowerPrime :
+        profile.lowerNeighborProduct .plus - 1 ≤ p := by omega
+    have hlowerCast :
+        (((8 * (profile.lowerNeighborProduct .plus - 1) : ℕ) : ℚ)) ≤
+          (8 * p : ℚ) := by
+      have hnat := Nat.mul_le_mul_left 8 hlowerPrime
+      exact_mod_cast hnat
+    exact (not_lt_of_ge (hlowerCast.trans hfailure)) hplus
+
+/-- Every fully matched profile can be certified by either a direct cutoff
+closure or a lower-product exclusion.  This disjunction is the leaf predicate
+for the forthcoming exhaustive profile tree. -/
+theorem prime_le_of_matching_rankinNeighborProfile_closes_or_excludes
+    {p bound cutoff : ℕ}
+    (hpPrime : p.Prime) (hpTwo : 2 < p)
+    (hroot :
+      8 * p ≤ (combinedTruncatedOrderTotientSum p bound) ^ 2)
+    (hboundWitness :
+      bound ≤ 189 * (middleGameMaximalOrders p bound).card ^ 3)
+    (profile : RankinNeighborProfile)
+    (hprofile : profile.Valid)
+    (hmatch : profile.Matches p)
+    (hleaf : profile.ClosesCutoff cutoff ∨ profile.ExcludesFailure) :
+    p ≤ cutoff := by
+  rcases hleaf with hcloses | hexcludes
+  · exact prime_le_of_matching_rankinNeighborProfile_closes
+      hpPrime hpTwo hroot hboundWitness profile hprofile hcloses hmatch
+  · exact False.elim
+      (false_of_matching_rankinNeighborProfile_excludes
+        hpPrime hpTwo hroot hboundWitness profile hprofile hmatch hexcludes)
 
 end BGS.Markoff

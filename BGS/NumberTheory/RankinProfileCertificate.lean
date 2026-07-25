@@ -183,6 +183,24 @@ def jointCoarseEulerProduct (profile : RankinNeighborProfile) : ℚ :=
   profile.coarseEulerProduct .minus +
     profile.coarseEulerProduct .plus
 
+/-- Product lower bound contributed by the odd factors assigned to one side. -/
+def oddLowerNeighborProduct :
+    NeighborSide → List RankinOddFactor → ℕ
+  | _, [] => 1
+  | side, factor :: factors =>
+      (if factor.side = side then
+          factor.weightCap.lowerPrime ^ factor.exponent
+        else 1) *
+        oddLowerNeighborProduct side factors
+
+/-- Factorization lower bound for `p - 1` or `p + 1` represented by a
+profile.  Unlike the failure square, this grows exponentially in large exact
+exponents and will support sound branch exclusion. -/
+def lowerNeighborProduct
+    (profile : RankinNeighborProfile) (side : NeighborSide) : ℕ :=
+  2 ^ profile.twoExponent side *
+    oddLowerNeighborProduct side profile.oddFactors
+
 def witnessCap (profile : RankinNeighborProfile) : ℕ :=
   189 * profile.jointDivisorCount ^ 3
 
@@ -201,11 +219,21 @@ def Valid (profile : RankinNeighborProfile) : Prop :=
 
 /-- A profile closes a proposed cutoff when its rational failure square lies
 strictly below `8 * (cutoff + 1)`. -/
+def failureSquare (profile : RankinNeighborProfile) : ℚ :=
+  ((profile.witnessCap : ℚ) * profile.rootCap *
+    profile.jointCoarseEulerProduct) ^ 2
+
 def ClosesCutoff
     (profile : RankinNeighborProfile) (cutoff : ℕ) : Prop :=
-  (((profile.witnessCap : ℚ) * profile.rootCap *
-      profile.jointCoarseEulerProduct) ^ 2) <
-    (8 * (cutoff + 1) : ℕ)
+  profile.failureSquare < (8 * (cutoff + 1) : ℕ)
+
+/-- A profile excludes the failure obstruction when one represented
+neighboring product already forces `p` above the profile failure square. -/
+def ExcludesFailure (profile : RankinNeighborProfile) : Prop :=
+  profile.failureSquare <
+      (8 * (profile.lowerNeighborProduct .minus + 1) : ℕ) ∨
+    profile.failureSquare <
+      (8 * (profile.lowerNeighborProduct .plus - 1) : ℕ)
 
 def check (profile : RankinNeighborProfile) : Bool :=
   (decide
@@ -227,6 +255,13 @@ def closesCutoffCheck
         profile.jointCoarseEulerProduct) ^ 2) <
       ((8 * (cutoff + 1) : ℕ) : ℚ))
 
+def excludesFailureCheck (profile : RankinNeighborProfile) : Bool :=
+  decide
+    (profile.failureSquare <
+        ((8 * (profile.lowerNeighborProduct .minus + 1) : ℕ) : ℚ) ∨
+      profile.failureSquare <
+        ((8 * (profile.lowerNeighborProduct .plus - 1) : ℕ) : ℚ))
+
 @[simp] theorem check_eq_true_iff (profile : RankinNeighborProfile) :
     profile.check = true ↔ profile.Valid := by
   simp [check, Valid, and_assoc]
@@ -235,7 +270,13 @@ def closesCutoffCheck
     (profile : RankinNeighborProfile) (cutoff : ℕ) :
     profile.closesCutoffCheck cutoff = true ↔
       profile.ClosesCutoff cutoff := by
-  simp [closesCutoffCheck, ClosesCutoff]
+  simp [closesCutoffCheck, ClosesCutoff, failureSquare]
+
+@[simp] theorem excludesFailureCheck_eq_true_iff
+    (profile : RankinNeighborProfile) :
+    profile.excludesFailureCheck = true ↔
+      profile.ExcludesFailure := by
+  simp [excludesFailureCheck, ExcludesFailure]
 
 end RankinNeighborProfile
 
