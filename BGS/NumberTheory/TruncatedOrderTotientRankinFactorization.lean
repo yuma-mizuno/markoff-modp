@@ -75,6 +75,36 @@ def rankinPrimePowerFactor
   1 + ((prime - 1 : ℕ) : ℚ) / prime *
     ∑ index ∈ Finset.range exponent, weight ^ (index + 1)
 
+/-- Prime-independent upper local factor.  Dropping `1 - 1 / prime` is
+important for profile certificates: a lower bound on the prime controls the
+weight, while this coarser factor is monotone-free. -/
+def coarseRankinPrimePowerFactor
+    (exponent : ℕ) (weight : ℚ) : ℚ :=
+  1 + ∑ index ∈ Finset.range exponent, weight ^ (index + 1)
+
+theorem rankinPrimePowerFactor_nonneg
+    {prime exponent : ℕ} (hprime : prime.Prime)
+    {weight : ℚ} (hweight : 0 ≤ weight) :
+    0 ≤ rankinPrimePowerFactor prime exponent weight := by
+  simp only [rankinPrimePowerFactor]
+  positivity
+
+theorem rankinPrimePowerFactor_le_coarse
+    {prime exponent : ℕ} (hprime : prime.Prime)
+    {weight : ℚ} (hweight : 0 ≤ weight) :
+    rankinPrimePowerFactor prime exponent weight ≤
+      coarseRankinPrimePowerFactor exponent weight := by
+  have hsumNonneg :
+      (0 : ℚ) ≤
+        ∑ index ∈ Finset.range exponent, weight ^ (index + 1) := by
+    positivity
+  have hratio : (((prime - 1 : ℕ) : ℚ) / prime) ≤ 1 := by
+    apply (div_le_one (by exact_mod_cast hprime.pos)).2
+    exact_mod_cast Nat.sub_le prime 1
+  simp only [rankinPrimePowerFactor, coarseRankinPrimePowerFactor]
+  gcongr
+  simpa using mul_le_mul_of_nonneg_right hratio hsumNonneg
+
 private theorem weightedTotientRatio_primePowerSum
     (prime exponent : ℕ) (hprime : prime.Prime)
   (primeWeight : ℕ → ℚ) :
@@ -147,6 +177,41 @@ theorem factorizationWeight_nonneg
   apply Finset.prod_nonneg
   intro prime hprime
   exact pow_nonneg (hprimeWeightNonneg prime) _
+
+/-- The exact Euler product is nonnegative when all supplied prime weights
+are nonnegative. -/
+theorem factorizationEulerProduct_nonneg
+    (N : ℕ) (hN : N ≠ 0) (primeWeight : ℕ → ℚ)
+    (hprimeWeightNonneg : ∀ prime, 0 ≤ primeWeight prime) :
+    0 ≤ N.factorization.prod fun prime exponent =>
+      rankinPrimePowerFactor prime exponent (primeWeight prime) := by
+  rw [← weightedTotientDivisorSum_eq_factorizationEulerProduct
+    N hN primeWeight]
+  apply Finset.sum_nonneg
+  intro order horder
+  exact mul_nonneg
+    (div_nonneg (by positivity) (by positivity))
+    (factorizationWeight_nonneg primeWeight hprimeWeightNonneg order)
+
+/-- The exact Euler product is bounded by the product of the
+prime-independent coarse local factors. -/
+theorem factorizationEulerProduct_le_coarse
+    (N : ℕ) (primeWeight : ℕ → ℚ)
+    (hprimeWeightNonneg : ∀ prime, 0 ≤ primeWeight prime) :
+    (N.factorization.prod fun prime exponent =>
+      rankinPrimePowerFactor prime exponent (primeWeight prime)) ≤
+    (N.factorization.prod fun prime exponent =>
+      coarseRankinPrimePowerFactor exponent (primeWeight prime)) := by
+  simp only [Finsupp.prod]
+  apply Finset.prod_le_prod
+  · intro prime hprime
+    exact rankinPrimePowerFactor_nonneg
+      (Nat.prime_of_mem_primeFactors hprime)
+      (hprimeWeightNonneg prime)
+  · intro prime hprime
+    exact rankinPrimePowerFactor_le_coarse
+      (Nat.prime_of_mem_primeFactors hprime)
+      (hprimeWeightNonneg prime)
 
 /-- A primewise twelfth-power lower bound multiplies to the exact Rankin
 weight hypothesis for every positive integer. -/
