@@ -1,6 +1,7 @@
 import BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
 import BGS.NumberTheory.RankinProfileCertificate
 import BGS.NumberTheory.RankinProfileMatching
+import BGS.NumberTheory.RankinJointEnvelopeCertificate
 import BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
 
 /-!
@@ -444,5 +445,31 @@ theorem prime_le_of_matching_rankinNeighborProfile_closes_or_excludes
   · exact False.elim
       (false_of_matching_rankinNeighborProfile_excludes
         hpPrime hpTwo hroot hboundWitness profile hprofile hmatch hexcludes)
+
+/-- Side-erased profiles eliminate the exponential assignment word from the
+future exhaustive search: it is enough to check the product envelope leaf. -/
+theorem prime_le_of_matching_rankinNeighborProfile_jointEnvelope_leaf
+    {p bound cutoff : ℕ}
+    (hpPrime : p.Prime) (hpTwo : 2 < p)
+    (hroot :
+      8 * p ≤ (combinedTruncatedOrderTotientSum p bound) ^ 2)
+    (hboundWitness :
+      bound ≤ 189 * (middleGameMaximalOrders p bound).card ^ 3)
+    (profile : RankinNeighborProfile)
+    (hprofile : profile.Valid)
+    (hmatch : profile.Matches p)
+    (hleaf :
+      profile.JointEnvelopeClosesCutoff cutoff ∨
+        profile.JointEnvelopeExcludesFailure) :
+    p ≤ cutoff := by
+  apply prime_le_of_matching_rankinNeighborProfile_closes_or_excludes
+    hpPrime hpTwo hroot hboundWitness profile hprofile hmatch
+  rcases hleaf with hcloses | hexcludes
+  · exact Or.inl
+      (profile.jointEnvelopeClosesCutoff_implies_closesCutoff
+        hprofile hcloses)
+  · exact Or.inr
+      (profile.jointEnvelopeExcludesFailure_implies_excludesFailure
+        hprofile hexcludes)
 
 end BGS.Markoff

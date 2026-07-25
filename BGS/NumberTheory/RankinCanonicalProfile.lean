@@ -1,4 +1,5 @@
 import BGS.NumberTheory.RankinProfileMatching
+import BGS.NumberTheory.RankinJointEnvelopeCertificate
 
 /-!
 # Canonical Rankin profile attached to a neighboring factorization
@@ -172,6 +173,36 @@ theorem canonicalRankinNeighborProfile_valid
   · rw [rankinOddFloorsStrictlyIncreasing,
       canonicalRankinNeighborProfile, List.pairwise_map]
     simpa [canonicalRankinOddFactor] using hfloorStrict
+
+/-- The side-erased joint root condition is sufficient for validity of the
+actual side assignment.  This lets a finite certificate choose its root cap
+without branching over which neighboring factor receives each odd prime. -/
+theorem canonicalRankinNeighborProfile_valid_of_jointEnvelope
+    {p : ℕ} (hpPrime : p.Prime) (hpTwo : 2 < p)
+    {twoCap : RationalPrimeWeightCap}
+    {oddCap : ℕ → RationalPrimeWeightCap} {rootCap : ℕ}
+    (htwoValid : twoCap.Valid)
+    (htwoFloor : twoCap.lowerPrime = 2)
+    (hoddValid :
+      ∀ prime ∈ jointOddPrimeList p,
+        (oddCap prime).Valid ∧
+          (oddCap prime).lowerPrime.Prime ∧
+          3 ≤ (oddCap prime).lowerPrime)
+    (hfloorStrict :
+      (jointOddPrimeList p).Pairwise fun left right =>
+        (oddCap left).lowerPrime < (oddCap right).lowerPrime)
+    (hrootPos : 0 < rootCap)
+    (hjointRoot :
+      RankinNeighborProfile.JointEnvelopeValid
+        (canonicalRankinNeighborProfile p twoCap oddCap rootCap)) :
+    (canonicalRankinNeighborProfile p twoCap oddCap rootCap).Valid := by
+  apply canonicalRankinNeighborProfile_valid hpPrime hpTwo
+    htwoValid htwoFloor hoddValid hfloorStrict hrootPos
+  exact
+    (RankinNeighborProfile.witnessCap_le_jointEnvelopeWitnessCap_of_shape
+      (canonicalRankinNeighborProfile p twoCap oddCap rootCap)
+      (neighboring_twoFactorization_shape hpPrime hpTwo)).trans
+      hjointRoot
 
 /-- A deliberately loose but universally available cap: weight one at the
 actual prime.  It is used only to prove that the profile representation is
