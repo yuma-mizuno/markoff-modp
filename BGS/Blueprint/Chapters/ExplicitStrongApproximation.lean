@@ -6,6 +6,7 @@ import BGS.Markoff.PreliminaryEndgame
 import BGS.Markoff.PreliminaryNumerics
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
+import BGS.Markoff.Assembly.RankinWidthEnvelope
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
 import BGS.NumberTheory.RankinCutoff1248Profile
@@ -134,6 +135,18 @@ Erasing the side labels gives exactly the certified skeleton profile, so its
 two-scalar summary dominates the actual profile.  This closes the semantic
 handoff from primes to generated summary rows; only the genuinely exhaustive
 arithmetic cover remains open.
+:::
+:::lemma_ "rankin_width_sensitive_endpoint" (parent := "explicit_strong_approximation") (uses := "rankin_actual_profile_handoff") (lean := "BGS.Markoff.rankinWidthWitnessCap, BGS.Markoff.rankinWidthJointFailureSquare, BGS.Markoff.eight_mul_prime_cast_le_matching_profile_rankinWidthFailureSquare, BGS.Markoff.prime_le_of_matching_rankinNeighborProfile_rankinWidth_leaf") (tags := "proved-in-lean, explicit, width-sensitive, conditional-route, rankin-envelope") (priority := "high")
+The exact-order Rankin inequality is no longer tied to the total number of
+divisors of p-1 and p+1.  If the actual union of maximal candidate orders has
+cardinality at most W, the Corvaja--Zannier witness is bounded directly by
+189 W^3.  The same side-erased Euler product then gives an executable cutoff
+or lower-product leaf.
+
+This is a strict architectural improvement over the all-divisors endpoint:
+a joint-antichain or symmetric-chain certificate can be inserted without
+changing the analytic proof.  This node proves the width-sensitive endpoint;
+it does not yet claim a numerical width certificate or the cutoff 2^1248.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
