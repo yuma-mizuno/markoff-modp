@@ -379,7 +379,7 @@ theorem false_of_matching_rankinNeighborProfile_excludes
       hpPrime hpTwo hroot hboundWitness profile hprofile hmatch
   have hlower :=
     profile.lowerNeighborProducts_le hpPrime hpTwo hmatch
-  rcases hexcludes with hminus | hplus
+  rcases hexcludes with hminus | hplus | hjoint
   · have hlowerPrime :
         profile.lowerNeighborProduct .minus + 1 ≤ p := by omega
     have hlowerCast :
@@ -395,6 +395,33 @@ theorem false_of_matching_rankinNeighborProfile_excludes
       have hnat := Nat.mul_le_mul_left 8 hlowerPrime
       exact_mod_cast hnat
     exact (not_lt_of_ge (hlowerCast.trans hfailure)) hplus
+  · have hneighborProduct :
+        profile.lowerNeighborProduct .minus *
+            profile.lowerNeighborProduct .plus ≤
+          (p - 1) * (p + 1) :=
+      Nat.mul_le_mul hlower.1 hlower.2
+    have hneighborLt : (p - 1) * (p + 1) < p ^ 2 := by
+      have hsub : p - 1 + 1 = p := by omega
+      nlinarith
+    have hlowerJointCast :
+        (((64 * (profile.lowerNeighborProduct .minus *
+          profile.lowerNeighborProduct .plus) : ℕ) : ℚ)) <
+          (64 * p ^ 2 : ℚ) := by
+      have hnat := (Nat.mul_lt_mul_left (by omega : 0 < 64)).2
+        (hneighborProduct.trans_lt hneighborLt)
+      exact_mod_cast hnat
+    have hfailureNonneg : (0 : ℚ) ≤ profile.failureSquare := by
+      rw [RankinNeighborProfile.failureSquare]
+      exact sq_nonneg _
+    have heighthPrimeNonneg : (0 : ℚ) ≤ (8 * p : ℚ) := by positivity
+    have hfailureSquared :
+        (64 * p ^ 2 : ℚ) ≤ profile.failureSquare ^ 2 := by
+      have hsquare :=
+        (sq_le_sq₀ heighthPrimeNonneg hfailureNonneg).2 hfailure
+      norm_num [mul_pow] at hsquare ⊢
+      exact hsquare
+    exact (not_lt_of_ge
+      (hlowerJointCast.le.trans hfailureSquared)) hjoint
 
 /-- Every fully matched profile can be certified by either a direct cutoff
 closure or a lower-product exclusion.  This disjunction is the leaf predicate

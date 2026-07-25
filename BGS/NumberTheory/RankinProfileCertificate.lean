@@ -233,7 +233,10 @@ def ExcludesFailure (profile : RankinNeighborProfile) : Prop :=
   profile.failureSquare <
       (8 * (profile.lowerNeighborProduct .minus + 1) : ℕ) ∨
     profile.failureSquare <
-      (8 * (profile.lowerNeighborProduct .plus - 1) : ℕ)
+      (8 * (profile.lowerNeighborProduct .plus - 1) : ℕ) ∨
+    profile.failureSquare ^ 2 <
+      (64 * (profile.lowerNeighborProduct .minus *
+        profile.lowerNeighborProduct .plus) : ℕ)
 
 def check (profile : RankinNeighborProfile) : Bool :=
   (decide
@@ -260,7 +263,10 @@ def excludesFailureCheck (profile : RankinNeighborProfile) : Bool :=
     (profile.failureSquare <
         ((8 * (profile.lowerNeighborProduct .minus + 1) : ℕ) : ℚ) ∨
       profile.failureSquare <
-        ((8 * (profile.lowerNeighborProduct .plus - 1) : ℕ) : ℚ))
+        ((8 * (profile.lowerNeighborProduct .plus - 1) : ℕ) : ℚ) ∨
+      profile.failureSquare ^ 2 <
+        ((64 * (profile.lowerNeighborProduct .minus *
+          profile.lowerNeighborProduct .plus) : ℕ) : ℚ))
 
 @[simp] theorem check_eq_true_iff (profile : RankinNeighborProfile) :
     profile.check = true ↔ profile.Valid := by
