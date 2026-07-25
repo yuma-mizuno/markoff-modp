@@ -99,6 +99,19 @@ def jointEnvelopeExcludesFailureCheck
     (profile.jointEnvelopeFailureSquare ^ 2 <
       ((64 * profile.jointLowerNeighborProduct : ℕ) : ℚ))
 
+/-- Complete executable leaf predicate for generated side-erased profiles. -/
+def JointEnvelopeLeafValid
+    (profile : RankinNeighborProfile) (cutoff : ℕ) : Prop :=
+  profile.Valid ∧ profile.JointEnvelopeValid ∧
+    (profile.JointEnvelopeClosesCutoff cutoff ∨
+      profile.JointEnvelopeExcludesFailure)
+
+def jointEnvelopeLeafCheck
+    (profile : RankinNeighborProfile) (cutoff : ℕ) : Bool :=
+  profile.check && profile.jointEnvelopeValidCheck &&
+    (profile.jointEnvelopeClosesCutoffCheck cutoff ||
+      profile.jointEnvelopeExcludesFailureCheck)
+
 @[simp] theorem jointEnvelopeValidCheck_eq_true_iff
     (profile : RankinNeighborProfile) :
     profile.jointEnvelopeValidCheck = true ↔
@@ -116,6 +129,150 @@ def jointEnvelopeExcludesFailureCheck
     profile.jointEnvelopeExcludesFailureCheck = true ↔
       profile.JointEnvelopeExcludesFailure := by
   simp [jointEnvelopeExcludesFailureCheck, JointEnvelopeExcludesFailure]
+
+@[simp] theorem jointEnvelopeLeafCheck_eq_true_iff
+    (profile : RankinNeighborProfile) (cutoff : ℕ) :
+    profile.jointEnvelopeLeafCheck cutoff = true ↔
+      profile.JointEnvelopeLeafValid cutoff := by
+  simp [jointEnvelopeLeafCheck, JointEnvelopeLeafValid, and_assoc]
+
+/-- Canonical representative of an odd slot after forgetting its side. -/
+def eraseOddFactorSide (factor : RankinOddFactor) : RankinOddFactor where
+  side := .minus
+  exponent := factor.exponent
+  weightCap := factor.weightCap
+
+/-- Canonical all-minus representative of a profile.  The joint envelope
+checker is invariant under this operation. -/
+def eraseSides (profile : RankinNeighborProfile) : RankinNeighborProfile where
+  minusTwoExponent := profile.minusTwoExponent
+  plusTwoExponent := profile.plusTwoExponent
+  twoWeightCap := profile.twoWeightCap
+  oddFactors := profile.oddFactors.map eraseOddFactorSide
+  rootCap := profile.rootCap
+
+private theorem oddJointDivisorProduct_map_eraseOddFactorSide
+    (factors : List RankinOddFactor) :
+    oddJointDivisorProduct (factors.map eraseOddFactorSide) =
+      oddJointDivisorProduct factors := by
+  induction factors with
+  | nil => simp [oddJointDivisorProduct]
+  | cons factor factors ih =>
+      simp [oddJointDivisorProduct, eraseOddFactorSide, ih]
+
+private theorem oddJointCoarseProduct_map_eraseOddFactorSide
+    (factors : List RankinOddFactor) :
+    oddJointCoarseEulerProductProduct
+        (factors.map eraseOddFactorSide) =
+      oddJointCoarseEulerProductProduct factors := by
+  induction factors with
+  | nil => simp [oddJointCoarseEulerProductProduct]
+  | cons factor factors ih =>
+      simp [oddJointCoarseEulerProductProduct, eraseOddFactorSide, ih]
+
+private theorem oddJointLowerProduct_map_eraseOddFactorSide
+    (factors : List RankinOddFactor) :
+    oddJointLowerNeighborProduct (factors.map eraseOddFactorSide) =
+      oddJointLowerNeighborProduct factors := by
+  induction factors with
+  | nil => simp [oddJointLowerNeighborProduct]
+  | cons factor factors ih =>
+      simp [oddJointLowerNeighborProduct, eraseOddFactorSide, ih]
+
+@[simp] theorem eraseSides_jointDivisorProduct
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.jointDivisorProduct =
+      profile.jointDivisorProduct := by
+  simp [eraseSides, jointDivisorProduct,
+    oddJointDivisorProduct_map_eraseOddFactorSide]
+
+@[simp] theorem eraseSides_jointCoarseEulerProductProduct
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.jointCoarseEulerProductProduct =
+      profile.jointCoarseEulerProductProduct := by
+  simp [eraseSides, jointCoarseEulerProductProduct,
+    oddJointCoarseProduct_map_eraseOddFactorSide]
+
+@[simp] theorem eraseSides_jointLowerNeighborProduct
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.jointLowerNeighborProduct =
+      profile.jointLowerNeighborProduct := by
+  simp [eraseSides, jointLowerNeighborProduct,
+    oddJointLowerProduct_map_eraseOddFactorSide]
+
+@[simp] theorem eraseSides_jointEnvelopeWitnessCap
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.jointEnvelopeWitnessCap =
+      profile.jointEnvelopeWitnessCap := by
+  simp [jointEnvelopeWitnessCap]
+
+@[simp] theorem eraseSides_jointEnvelopeFailureSquare
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.jointEnvelopeFailureSquare =
+      profile.jointEnvelopeFailureSquare := by
+  change
+    (((profile.eraseSides.jointEnvelopeWitnessCap : ℚ) *
+      profile.eraseSides.rootCap *
+      (2 * profile.eraseSides.jointCoarseEulerProductProduct)) ^ 2) =
+    (((profile.jointEnvelopeWitnessCap : ℚ) * profile.rootCap *
+      (2 * profile.jointCoarseEulerProductProduct)) ^ 2)
+  rw [eraseSides_jointEnvelopeWitnessCap,
+    eraseSides_jointCoarseEulerProductProduct]
+  rfl
+
+@[simp] theorem eraseSides_jointEnvelopeValid_iff
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.JointEnvelopeValid ↔
+      profile.JointEnvelopeValid := by
+  change
+    profile.eraseSides.jointEnvelopeWitnessCap ≤
+        profile.eraseSides.rootCap ^ 12 ↔
+      profile.jointEnvelopeWitnessCap ≤ profile.rootCap ^ 12
+  rw [eraseSides_jointEnvelopeWitnessCap]
+  rfl
+
+@[simp] theorem eraseSides_jointEnvelopeClosesCutoff_iff
+    (profile : RankinNeighborProfile) (cutoff : ℕ) :
+    profile.eraseSides.JointEnvelopeClosesCutoff cutoff ↔
+      profile.JointEnvelopeClosesCutoff cutoff := by
+  simp [JointEnvelopeClosesCutoff]
+
+@[simp] theorem eraseSides_jointEnvelopeExcludesFailure_iff
+    (profile : RankinNeighborProfile) :
+    profile.eraseSides.JointEnvelopeExcludesFailure ↔
+      profile.JointEnvelopeExcludesFailure := by
+  simp [JointEnvelopeExcludesFailure]
+
+private theorem allRankinOddFactorsValid_map_eraseOddFactorSide
+    {factors : List RankinOddFactor}
+    (hvalid : allRankinOddFactorsValid factors) :
+    allRankinOddFactorsValid (factors.map eraseOddFactorSide) := by
+  induction factors with
+  | nil => simp [allRankinOddFactorsValid]
+  | cons factor factors ih =>
+      simp only [allRankinOddFactorsValid] at hvalid
+      simp only [List.map_cons, allRankinOddFactorsValid]
+      exact ⟨by simpa [RankinOddFactor.Valid, eraseOddFactorSide] using hvalid.1,
+        ih hvalid.2⟩
+
+private theorem rankinOddFloorsStrictlyIncreasing_map_eraseOddFactorSide
+    {factors : List RankinOddFactor}
+    (hstrict : rankinOddFloorsStrictlyIncreasing factors) :
+    rankinOddFloorsStrictlyIncreasing
+      (factors.map eraseOddFactorSide) := by
+  rw [rankinOddFloorsStrictlyIncreasing] at hstrict ⊢
+  rw [List.pairwise_map]
+  simpa [eraseOddFactorSide] using hstrict
+
+/-- Checking the canonical all-minus representative is exactly equivalent to
+checking the joint arithmetic leaf of the actual side assignment. -/
+theorem jointEnvelope_leaf_of_eraseSides_leaf
+    (profile : RankinNeighborProfile) {cutoff : ℕ}
+    (hleaf : profile.eraseSides.JointEnvelopeClosesCutoff cutoff ∨
+      profile.eraseSides.JointEnvelopeExcludesFailure) :
+    profile.JointEnvelopeClosesCutoff cutoff ∨
+      profile.JointEnvelopeExcludesFailure := by
+  simpa using hleaf
 
 private theorem oddDivisorCount_pos
     (side : NeighborSide) (factors : List RankinOddFactor) :
@@ -399,6 +556,23 @@ theorem jointEnvelopeExcludesFailure_implies_excludesFailure
   rw [JointEnvelopeExcludesFailure,
     profile.jointLowerNeighborProduct_eq_mul] at hexcludes'
   exact hsquare.trans_lt hexcludes'
+
+/-- A valid actual profile with a side-erased root certificate yields a valid
+canonical all-minus profile. -/
+theorem eraseSides_valid_of_valid_of_jointEnvelopeValid
+    (profile : RankinNeighborProfile) (hprofile : profile.Valid)
+    (hjoint : profile.JointEnvelopeValid) :
+    profile.eraseSides.Valid := by
+  refine ⟨hprofile.1, hprofile.2.1, hprofile.2.2.1,
+    allRankinOddFactorsValid_map_eraseOddFactorSide hprofile.2.2.2.1,
+    rankinOddFloorsStrictlyIncreasing_map_eraseOddFactorSide
+      hprofile.2.2.2.2.1,
+    ?_, ?_⟩
+  · simpa [eraseSides] using hprofile.2.2.2.2.2.1
+  · exact
+      (profile.eraseSides.witnessCap_le_jointEnvelopeWitnessCap_of_shape
+        hprofile.1).trans
+        ((eraseSides_jointEnvelopeValid_iff profile).mpr hjoint)
 
 end RankinNeighborProfile
 
