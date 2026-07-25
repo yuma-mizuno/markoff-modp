@@ -8,6 +8,7 @@ import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
+import BGS.NumberTheory.RankinCutoff1248Skeleton
 import Verso
 import VersoManual
 import VersoBlueprint
@@ -87,6 +88,26 @@ sum to $`447`, hence at most $`448`.  Multiplying over the prime factorization
 proves the displayed estimate.  Finally,
 $`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
 $`(p-1)+(p+1)=2p` give $`T^{10}\le2^{458}p`.
+:::
+:::lemma_ "rankin_1248_finite_domain" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.rankinCutoff1248CapTable_check, BGS.NumberTheory.rankinCutoff1248CapTable_product, BGS.NumberTheory.jointOddPrimeList_length_lt_275_of_lt_two_pow_1248, BGS.NumberTheory.actualRankinExponentSkeleton_admissible_1248") (tags := "proved-in-lean, explicit, finite-domain, conditional-route, rankin-envelope") (priority := "high")
+The new Rankin-envelope route has a proved finite-domain boundary at 2^1248.
+Lean checks that the listed numbers from 3 through 1783 are exactly the first
+275 odd primes and that their product is larger than 2^2496.  If p is less
+than 2^1248, then (p-1)(p+1) is less than 2^2496, so the joint odd-prime
+support of p-1 and p+1 has fewer than 275 entries.
+
+After erasing which neighbor owns each odd prime and replacing its prime value
+by the corresponding positional Rankin cap, every actual prime in this range
+therefore maps to an executable exponent skeleton.  The skeleton records the
+two 2-adic exponents, the positive odd exponents, the neighboring
+2-factorization shape, the support bound, and the same global product budget.
+This is a new formal reduction rather than a theorem quoted from the paper.
+
+This node proves coverage of the finite search domain only.  It does not yet
+assert that every admissible skeleton is closed by a domination leaf, and it
+does not state transitivity or reduction surjectivity below 2^1248.  The
+remaining obligation is an exhaustive, kernel-checked leaf certificate
+together with its composition into the exact-order endpoint.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
