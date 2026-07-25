@@ -29,7 +29,7 @@ For a commutative semiring $R$, define the Markoff surface by
 Let
 
 ```math
-p_0 = 2^{1833}(48^3+1)^{10}+1.
+p_0 = 35721^5\,2^{1813}+1.
 ```
 
 **Theorem** (Strong approximation for large primes). For every prime $p$ with $p_0 \le p$, the map
@@ -54,7 +54,7 @@ def Markoff : CommSemiRingCat ⥤ Type where
     simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
 
 theorem Markoff.reduction_surjective_of_explicitBound :
-    let p₀ := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1
+    let p₀ := 35721 ^ 5 * 2 ^ 1813 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
@@ -63,13 +63,17 @@ theorem Markoff.reduction_surjective_of_explicitBound :
 and its proof is given as
 [`BGS.Markoff.reduction_surjective_of_explicitBound`](BGS/Markoff/Assembly/ReductionSurjectivity.lean).
 
-The displayed cutoff is a 603-digit integer, approximately
-$1.6798033504257266\times 10^{602}$.  It formalizes the paper's preliminary
-all-divisors Corvaja--Zannier route with the fully elementary estimate
-$\tau(n)^{10}\le 2^{447}n$.  The paper's sharper preliminary threshold
-$p>10^{532}$ instead uses Nicolas' explicit divisor bound and an explicit
-Euler-totient estimate; those analytic numerical estimates are not imported
-into this formal endpoint.
+The displayed cutoff is a 569-digit integer, approximately
+$3.4040833120411547\times 10^{568}$.  It combines the formalized Euler-seven
+maximal-divisor complement argument with the fully elementary estimate
+$\tau(n)^{10}\le 2^{447}n$.  The remaining joint maximal-divisor count is
+bounded by the simultaneous all-divisor count, so no divisor table or large
+finite certificate is used.  This improves the preceding elementary formal
+cutoff by a factor of approximately $4.9347\times 10^{33}$.
+
+The paper's preliminary threshold $p>10^{532}$ instead uses Nicolas' explicit
+divisor bound and an explicit Euler-totient estimate; those analytic numerical
+estimates are not imported into this formal endpoint.
 
 ## Improving the cutoff
 

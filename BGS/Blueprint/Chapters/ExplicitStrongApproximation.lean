@@ -5,6 +5,7 @@ import BGS.Markoff.ExplicitNumericCertificates
 import BGS.Markoff.PreliminaryEndgame
 import BGS.Markoff.PreliminaryNumerics
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+import BGS.Markoff.Assembly.CoarseSupportSurjectivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.Markoff.Assembly.RankinWidthEnvelope
 import BGS.Markoff.Assembly.RankinJointAntichainWidth
@@ -39,22 +40,30 @@ in the BGS method effective.  Their introduction first obtains connectivity
 above $`10^{532}`, then replaces the total-divisor count by maximal divisors
 and reports an optimized primorial/product cutoff.
 
-The formal route below follows the preliminary all-divisors mechanism but
-replaces the paper's Nicolas and Euler-totient estimates by a fully elementary
-tenth-moment divisor bound.  Lean proves
+The formal arithmetic input replaces the paper's Nicolas and Euler-totient
+estimates by a fully elementary tenth-moment divisor bound.  Lean proves
 
 $$`
   \tau(n)^{10}\le 2^{447}n,
-  \qquad K_{10}=2^{457},
-  \qquad p_0=2^{1833}(48^3+1)^{10}+1.
+  \qquad K_{10}=2^{457}.
 `
 
-The prime-factor penalties sum exactly to $`447`.  The resulting $`p_0` is
-approximately $`1.6798033504257266\times10^{602}`.  It is larger than the paper's preliminary
-$`10^{532}` threshold, because no Nicolas inequality or explicit lower bound
-for $`\varphi` is imported.  It is nevertheless far smaller than the former
-formal ninth-moment cutoff and formalizes the main all-divisors idea without
-using maximal divisors, the finite enumeration, or Algorithm 1.
+The prime-factor penalties sum exactly to $`447`.  The direct preliminary
+all-divisors assembly gives the proved checkpoint
+$`2^{1833}(48^3+1)^{10}+1`.  The final route then uses the formalized
+Euler-seven maximal-divisor complement argument.  Bounding its joint maximal
+divisor count by the same simultaneous all-divisor count closes the last cubic
+obstruction without a divisor table and gives
+
+$$`
+  p_0=35721^5\,2^{1813}+1
+     \approx 3.4040833120411547\times10^{568}.
+`
+
+This is smaller than the direct preliminary formal cutoff by approximately
+$`4.9347\times10^{33}`.  No Nicolas inequality, explicit lower bound for
+$`\varphi`, finite maximal-divisor enumeration, or Algorithm 1 certificate is
+imported into this endpoint.
 :::lemma_ "explicit_elementary_divisor_bound" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.preliminaryPrimePenalty, BGS.NumberTheory.card_divisors_pow_ten_le_preliminary_constant_mul, BGS.Markoff.preliminaryDivisorMomentConstant, BGS.Markoff.preliminaryDivisorMomentConstant_eq, BGS.Markoff.preliminary_divisor_sum_pow_ten_le") (tags := "proved-in-lean, explicit, arithmetic, paper-preliminary-route") (priority := "high")
 %%%
 source := {
@@ -91,6 +100,57 @@ proves the displayed estimate.  Finally,
 $`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
 $`(p-1)+(p+1)=2p` give $`T^{10}\le2^{457}p`.
 :::
+:::theorem "euler_seven_coarse_support_frontier" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound, corvaja_zannier_existing_markoff_adapter, chen_orbit_divisibility_via_martin") (lean := "BGS.Markoff.maximalDivisorCountSum, BGS.NumberTheory.eight_mul_le_35721_mul_fourth_of_count_degree_squareEnvelope, BGS.Markoff.puncturedMarkoffTransitiveAt_of_nonparabolicComplement_eulerSevenPairedMaximalDivisor_frontier, BGS.Markoff.puncturedMarkoffTransitiveAt_of_eulerSevenSquareEnvelope_coarseSupport, BGS.Markoff.markoffReduction_surjective_of_eulerSevenSquareEnvelope_coarseSupport") (tags := "proved-in-lean, explicit, maximal-divisors, euler-seven, dependency-frontier") (priority := "high")
+%%%
+source := {
+  document := "eddy-fuchs-litman-martin-tripeny"
+  spans := #[
+    {
+      page := "PDF pp. 3--6; Section 2, maximal-divisor middle game and effective connectivity route; author TeX lines 170--233"
+      pdf := some { path := "https://arxiv.org/pdf/2308.07579v1" }
+    }
+  ]
+}
+%%%
+
+The refined middle game counts only divisibility-maximal candidate orders
+from $`p-1` and $`p+1`.  The Euler-seven paired Corvaja--Zannier step turns a
+failed increase at order $`d` into
+
+$$`
+  8p\le 35721\,S(d)^4,
+`
+
+whenever $`S(d)` bounds the square of the joint maximal-divisor count.  Above
+$`2^{756}`, separate coarse estimates discharge the linear middle game,
+primitive-trace endgame, cage connectivity, base-point construction, and
+half-order comparison.  Lean therefore proves transitivity and natural
+reduction surjectivity from only the displayed square-envelope family.
+
+This node is a completed conditional frontier.  It does not by itself assert
+that a particular envelope satisfies the global strict inequality; that final
+arithmetic implication is attached in the next node.
+:::
+
+:::theorem "certificate_free_coarse_support_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound, euler_seven_coarse_support_frontier") (lean := "BGS.Markoff.coarseSupportStrongApproximationOpenCutoff, BGS.Markoff.coarseSupportStrongApproximationCutoff, BGS.Markoff.preliminary_35721_mul_divisorSum_pow_eight_lt, BGS.Markoff.maximalDivisorCountSum_sq_le_divisorSum_sq, BGS.Markoff.twoPow756_lt_of_coarseSupportOpenCutoff_lt, BGS.Markoff.markoffReduction_surjective_of_coarseSupportOpenCutoff, BGS.Markoff.markoffReduction_surjective_of_coarseSupportBound") (tags := "proved-in-lean, explicit, dependency-complete, certificate-free, numerical-cutoff") (priority := "high")
+Set $`T=\tau(p-1)+\tau(p+1)` and use the constant square envelope
+$`S(d)=T^2`.  Every maximal-divisor count is at most the corresponding total
+divisor count, so this envelope is valid for all $`d`.  If the Euler-seven
+obstruction failed, then
+
+$$`
+  (8p)^5\le 35721^5T^{40}
+       \le 35721^5(2^{457}p)^4.
+`
+
+Canceling $`2^{15}p^4` gives
+$`p\le35721^5 2^{1813}`.  Hence the strict obstruction inequality holds for
+every $`p>35721^5 2^{1813}`.  This cutoff also dominates $`2^{756}`, so the
+coarse-support frontier applies and yields reduction surjectivity.  The proof
+uses only kernel-checked symbolic arithmetic and the elementary divisor
+moment; there is no factorization list or large finite certificate.
+:::
+
 :::lemma_ "rankin_1248_finite_domain" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.rankinCutoff1248CapTable_check, BGS.NumberTheory.rankinCutoff1248CapTable_product, BGS.NumberTheory.jointOddPrimeList_length_lt_275_of_lt_two_pow_1248, BGS.NumberTheory.actualRankinExponentSkeleton_admissible_1248") (tags := "proved-in-lean, explicit, finite-domain, conditional-route, rankin-envelope") (priority := "high")
 The new Rankin-envelope route has a proved finite-domain boundary at 2^1248.
 Lean checks that the listed numbers from 3 through 1783 are exactly the first
@@ -305,7 +365,7 @@ final explicit theorem is attached separately only after Lean instantiates
 all three packages from the certificate and endgame declarations above.
 :::
 
-:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_preliminaryCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity") (priority := "high")
+:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_preliminaryCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity, preliminary-checkpoint") (priority := "high")
 %%%
 source := {
   document := "eddy-fuchs-litman-martin-tripeny"
@@ -331,7 +391,9 @@ $$`
 the action of $`\Gamma` on $`X^*(\mathbb F_p)` is transitive.  The declaration
 `BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound` exposes this raw
 natural-number expression in its hypothesis; no unfolding of an opaque
-constant is required by clients.
+constant is required by clients.  This remains a proved preliminary checkpoint;
+the final public cutoff below uses the smaller Euler-seven coarse-support
+composition.
 :::
 
 :::proof "explicit_punctured_transitivity_cutoff"
@@ -343,7 +405,7 @@ through the older existential theorem
 `BGS.Markoff.eventually_strongApproximationAt`.
 :::
 
-:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, explicit_punctured_transitivity_cutoff") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_iff_strongApproximationAt, BGS.Markoff.strongApproximationAt_iff_markoffReduction_surjective, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal") (priority := "high")
+:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, certificate_free_coarse_support_cutoff") (lean := "BGS.Markoff.markoffReduction_surjective_of_coarseSupportBound, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal, certificate-free") (priority := "high")
 %%%
 source := {
   document := "bgs-published-selected-route"
@@ -364,7 +426,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^{1833}(48^3+1)^{10}+1\le p,
+  35721^5\,2^{1813}+1\le p,
 `
 
 coordinatewise reduction is surjective:
@@ -386,22 +448,13 @@ explicit range of primes.
 :::
 
 :::proof "explicit_markoff_reduction_surjective"
-Reduction carries the natural root and origin to their counterparts modulo
-$`p` and intertwines every Vieta move and coordinate swap.  A finite-field word
-from the root to a punctured target therefore lifts to a natural word, while
-the target origin is lifted by the natural origin.  This proves that modular
-transitivity implies reduction surjectivity.
-
-Conversely, lift two punctured finite-field points using reduction
-surjectivity.  Their natural lifts are nonzero, so the natural descent theorem
-connects both to $`(1,1,1)`; reducing those paths connects the original points.
-Lean packages the two directions as
-`BGS.Markoff.puncturedMarkoffTransitiveAt_iff_strongApproximationAt`.
-The separate theorem
-`BGS.Markoff.strongApproximationAt_iff_markoffReduction_surjective` only
-changes between the public triple presentation and the structured internal
-reduction map.  Applying the first equivalence to the explicit transitivity
-theorem gives the stated public endpoint.
+The certificate-free coarse-support theorem first proves surjectivity of the
+structured natural Markoff reduction at the displayed cutoff.  The public
+endpoint then transports this statement across
+`BGS.Markoff.markoffEquivSemiringMarkoffSurface`, which identifies the
+internal Markoff surface with the functor-of-points triple presentation used
+by the Comparator challenge.  No numerical assumption is strengthened during
+this final change of presentation.
 :::
 
 The paper's Corollary 2.5 proves the sharper preliminary threshold
@@ -410,10 +463,9 @@ $`T_d\le\tau(p-1)+\tau(p+1)` and an explicit lower bound for
 $`\varphi(p\pm1)`.  It then improves this further by replacing total divisors
 with maximal divisors and running a finite search over reduced integers.
 
-Those two optimizations are source context, not hidden premises of the Lean
-graph.  The formal endpoint follows the paper's all-divisors
-Corvaja--Zannier/maximal-bad-orbit architecture, but closes its numerical
-obligations with the elementary tenth-moment estimate above.  It therefore
-claims the larger displayed cutoff and makes no claim that either Nicolas'
-analytic estimate or the computer-generated primorial/product certificate has
-been formalized.
+Those paper optimizations are source context, not hidden premises of the Lean
+graph.  The formal endpoint uses the maximal-divisor Euler-seven middle game
+but closes its global count by the elementary all-divisor tenth moment.  It
+therefore claims the displayed $`35721^5 2^{1813}+1` cutoff and makes no claim
+that either Nicolas' analytic estimate or the computer-generated
+primorial/product certificate has been formalized.

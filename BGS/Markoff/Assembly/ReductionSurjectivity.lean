@@ -1,4 +1,5 @@
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+import BGS.Markoff.Assembly.CoarseSupportSurjectivity
 import BGS.Markoff.Assembly.TransitivitySurjectivity
 
 /-!
@@ -28,17 +29,17 @@ theorem markoffReduction_surjective_of_concretePreliminaryBound
   (puncturedMarkoffTransitiveAt_iff_markoffReduction_surjective p hpPrime).mp
     (puncturedMarkoffTransitiveAt_of_concretePreliminaryBound p hpPrime hp)
 
-/-- The elementary preliminary-route theorem in the public functor
-presentation used by the Comparator challenge. -/
+/-- The certificate-free Euler-seven coarse-support theorem in the public
+functor presentation used by the Comparator challenge. -/
 theorem reduction_surjective_of_explicitBound :
-    let p₀ := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1
+    let p₀ := 35721 ^ 5 * 2 ^ 1813 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (BGS.Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
   dsimp only
   intro p hpPrime hp y
   obtain ⟨x, hx⟩ :=
-    markoffReduction_surjective_of_concretePreliminaryBound p hpPrime hp
+    markoffReduction_surjective_of_coarseSupportBound p hpPrime hp
     (markoffEquivSemiringMarkoffSurface (ZMod p) y)
   refine ⟨(markoffEquivSemiringMarkoffSurface ℕ).symm x, ?_⟩
   apply (markoffEquivSemiringMarkoffSurface (ZMod p)).injective
