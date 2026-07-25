@@ -313,7 +313,7 @@ theorem puncturedMarkoffTransitiveAt_of_preliminaryCutoff
 /-- Raw-expression form of the elementary preliminary-route endpoint. -/
 theorem puncturedMarkoffTransitiveAt_of_concretePreliminaryBound
     (p : ℕ) (hpPrime : p.Prime)
-    (hp : (2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
+    (hp : (2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
     PuncturedMarkoffTransitiveAt p hpPrime := by
   apply puncturedMarkoffTransitiveAt_of_preliminaryCutoff p hpPrime
   simpa only [preliminaryStrongApproximationCutoff_eq] using hp

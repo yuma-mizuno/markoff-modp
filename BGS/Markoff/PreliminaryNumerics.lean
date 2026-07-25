@@ -15,10 +15,10 @@ namespace BGS.Markoff
 
 /-- The simultaneous tenth-moment constant for the divisor counts of `p - 1`
 and `p + 1`. -/
-def preliminaryDivisorMomentConstant : ℕ := 2 ^ 458
+def preliminaryDivisorMomentConstant : ℕ := 2 ^ 457
 
 theorem preliminaryDivisorMomentConstant_eq :
-    preliminaryDivisorMomentConstant = 2 ^ 458 := rfl
+    preliminaryDivisorMomentConstant = 2 ^ 457 := rfl
 
 theorem preliminaryDivisorMomentConstant_pos :
     0 < preliminaryDivisorMomentConstant := by
@@ -27,8 +27,8 @@ theorem preliminaryDivisorMomentConstant_pos :
 
 /-- Sealed data for the elementary preliminary-route cutoff. -/
 opaque preliminaryStrongApproximationCutoffData :
-    {n : ℕ // n = 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1} :=
-  ⟨2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1, rfl⟩
+    {n : ℕ // n = 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1} :=
+  ⟨2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1, rfl⟩
 
 /-- A fully elementary replacement for the paper's `10^532` threshold. -/
 def preliminaryStrongApproximationCutoff : ℕ :=
@@ -36,20 +36,20 @@ def preliminaryStrongApproximationCutoff : ℕ :=
 
 theorem preliminaryStrongApproximationCutoff_eq :
     preliminaryStrongApproximationCutoff =
-      2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1 :=
+      2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1 :=
   preliminaryStrongApproximationCutoffData.2
 
 set_option maxRecDepth 100000 in
 theorem preliminaryCutoff_gt_one :
     1 < preliminaryStrongApproximationCutoff := by
   rw [preliminaryStrongApproximationCutoff_eq]
-  have h : 0 < 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 :=
+  have h : 0 < 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 :=
     Nat.mul_pos (pow_pos (by norm_num) _) (pow_pos (by norm_num) _)
   omega
 
 theorem preliminaryCutoff_constant_lt
     {p : ℕ} (hp : preliminaryStrongApproximationCutoff ≤ p) :
-    2 ^ 1837 * (48 ^ 3 + 1) ^ 10 < p := by
+    2 ^ 1833 * (48 ^ 3 + 1) ^ 10 < p := by
   rw [preliminaryStrongApproximationCutoff_eq] at hp
   omega
 
@@ -73,50 +73,50 @@ theorem preliminary_divisor_sum_pow_ten_le
           ((p - 1).divisors.card ^ 10 + (p + 1).divisors.card ^ 10) :=
       add_pow_le (Nat.zero_le _) (Nat.zero_le _) 10
     _ ≤ 2 ^ 9 *
-        (2 ^ 448 * (p - 1) + 2 ^ 448 * (p + 1)) := by
+        (2 ^ 447 * (p - 1) + 2 ^ 447 * (p + 1)) := by
       norm_num
       gcongr
     _ = preliminaryDivisorMomentConstant * p := by
       rw [preliminaryDivisorMomentConstant_eq]
       have hsum : p - 1 + (p + 1) = 2 * p := by omega
-      have hpow : 2 ^ 9 * 2 ^ 448 * 2 = 2 ^ 458 := by
-        have h448 : 2 ^ 448 * 2 = 2 ^ 449 := by
-          simpa using (pow_succ 2 448).symm
+      have hpow : 2 ^ 9 * 2 ^ 447 * 2 = 2 ^ 457 := by
+        have h447 : 2 ^ 447 * 2 = 2 ^ 448 := by
+          simpa using (pow_succ 2 447).symm
         calc
-          2 ^ 9 * 2 ^ 448 * 2 = 2 ^ 9 * (2 ^ 448 * 2) := by ring
-          _ = 2 ^ 9 * 2 ^ 449 := by rw [h448]
-          _ = 2 ^ (9 + 449) := (pow_add 2 9 449).symm
-          _ = 2 ^ 458 := by norm_num
+          2 ^ 9 * 2 ^ 447 * 2 = 2 ^ 9 * (2 ^ 447 * 2) := by ring
+          _ = 2 ^ 9 * 2 ^ 448 := by rw [h447]
+          _ = 2 ^ (9 + 448) := (pow_add 2 9 448).symm
+          _ = 2 ^ 457 := by norm_num
       calc
-        2 ^ 9 * (2 ^ 448 * (p - 1) + 2 ^ 448 * (p + 1)) =
-            2 ^ 9 * 2 ^ 448 * (p - 1 + (p + 1)) := by ring
-        _ = 2 ^ 9 * 2 ^ 448 * (2 * p) := by rw [hsum]
-        _ = (2 ^ 9 * 2 ^ 448 * 2) * p := by ring
-        _ = 2 ^ 458 * p := by rw [hpow]
+        2 ^ 9 * (2 ^ 447 * (p - 1) + 2 ^ 447 * (p + 1)) =
+            2 ^ 9 * 2 ^ 447 * (p - 1 + (p + 1)) := by ring
+        _ = 2 ^ 9 * 2 ^ 447 * (2 * p) := by rw [hsum]
+        _ = (2 ^ 9 * 2 ^ 447 * 2) * p := by ring
+        _ = 2 ^ 457 * p := by rw [hpow]
 
 private theorem preliminary_moment_pow_eight_le_cutoff_sq :
     preliminaryDivisorMomentConstant ^ 8 ≤
-      (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
+      (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
   rw [preliminaryDivisorMomentConstant_eq]
   calc
-    (2 ^ 458) ^ 8 = 2 ^ 3664 := by
-      rw [show (3664 : ℕ) = 458 * 8 by norm_num, pow_mul]
-    _ ≤ 2 ^ 3674 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
-    _ = (2 ^ 1837) ^ 2 := by
-      rw [show (3674 : ℕ) = 1837 * 2 by norm_num, pow_mul]
-    _ ≤ (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
+    (2 ^ 457) ^ 8 = 2 ^ 3656 := by
+      rw [show (3656 : ℕ) = 457 * 8 by norm_num, pow_mul]
+    _ ≤ 2 ^ 3666 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
+    _ = (2 ^ 1833) ^ 2 := by
+      rw [show (3666 : ℕ) = 1833 * 2 by norm_num, pow_mul]
+    _ ≤ (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
       gcongr
       exact Nat.le_mul_of_pos_right _ (by positivity)
 
 private theorem preliminary_middle_coefficient_le_cutoff_pow_four :
     48 ^ 60 * preliminaryDivisorMomentConstant ^ 6 ≤
-      (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
+      (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
   rw [preliminaryDivisorMomentConstant_eq]
-  have htwo : (2 ^ 458) ^ 6 ≤ 2 ^ 7348 := by
+  have htwo : (2 ^ 457) ^ 6 ≤ 2 ^ 7332 := by
     calc
-      (2 ^ 458) ^ 6 = 2 ^ 2748 := by
-        rw [show (2748 : ℕ) = 458 * 6 by norm_num, pow_mul]
-      _ ≤ 2 ^ 7348 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
+      (2 ^ 457) ^ 6 = 2 ^ 2742 := by
+        rw [show (2742 : ℕ) = 457 * 6 by norm_num, pow_mul]
+      _ ≤ 2 ^ 7332 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
   have hbase : 48 ^ 60 ≤ (48 ^ 3 + 1) ^ 40 := by
     calc
       48 ^ 60 = (48 ^ 3) ^ 20 := by
@@ -125,20 +125,20 @@ private theorem preliminary_middle_coefficient_le_cutoff_pow_four :
       _ ≤ (48 ^ 3 + 1) ^ 40 :=
         Nat.pow_le_pow_right (by positivity) (by norm_num)
   calc
-    48 ^ 60 * (2 ^ 458) ^ 6 = (2 ^ 458) ^ 6 * 48 ^ 60 := by ring
-    _ ≤ 2 ^ 7348 * (48 ^ 3 + 1) ^ 40 := Nat.mul_le_mul htwo hbase
-    _ = (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
+    48 ^ 60 * (2 ^ 457) ^ 6 = (2 ^ 457) ^ 6 * 48 ^ 60 := by ring
+    _ ≤ 2 ^ 7332 * (48 ^ 3 + 1) ^ 40 := Nat.mul_le_mul htwo hbase
+    _ = (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
       norm_num [mul_pow, ← pow_mul]
 
 private theorem preliminary_endgame_coefficient_le_cutoff_pow_four :
     68 ^ 30 * preliminaryDivisorMomentConstant ^ 6 ≤
-      (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
+      (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
   rw [preliminaryDivisorMomentConstant_eq]
-  have htwo : (2 ^ 458) ^ 6 ≤ 2 ^ 7348 := by
+  have htwo : (2 ^ 457) ^ 6 ≤ 2 ^ 7332 := by
     calc
-      (2 ^ 458) ^ 6 = 2 ^ 2748 := by
-        rw [show (2748 : ℕ) = 458 * 6 by norm_num, pow_mul]
-      _ ≤ 2 ^ 7348 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
+      (2 ^ 457) ^ 6 = 2 ^ 2742 := by
+        rw [show (2742 : ℕ) = 457 * 6 by norm_num, pow_mul]
+      _ ≤ 2 ^ 7332 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
   have hbase : 68 ^ 30 ≤ (48 ^ 3 + 1) ^ 40 := by
     calc
       68 ^ 30 ≤ (48 ^ 3 + 1) ^ 30 :=
@@ -146,49 +146,49 @@ private theorem preliminary_endgame_coefficient_le_cutoff_pow_four :
       _ ≤ (48 ^ 3 + 1) ^ 40 :=
         Nat.pow_le_pow_right (by positivity) (by norm_num)
   calc
-    68 ^ 30 * (2 ^ 458) ^ 6 = (2 ^ 458) ^ 6 * 68 ^ 30 := by ring
-    _ ≤ 2 ^ 7348 * (48 ^ 3 + 1) ^ 40 := Nat.mul_le_mul htwo hbase
-    _ = (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
+    68 ^ 30 * (2 ^ 457) ^ 6 = (2 ^ 457) ^ 6 * 68 ^ 30 := by ring
+    _ ≤ 2 ^ 7332 * (48 ^ 3 + 1) ^ 40 := Nat.mul_le_mul htwo hbase
+    _ = (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 4 := by
       norm_num [mul_pow, ← pow_mul]
 
 set_option maxRecDepth 100000 in
 private theorem preliminary_fixed_pow_eight_le_cutoff :
-    100522 ^ 8 ≤ 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 := by
+    100522 ^ 8 ≤ 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 := by
   calc
     100522 ^ 8 ≤ (2 ^ 17) ^ 8 := Nat.pow_le_pow_left (by norm_num) _
     _ = 2 ^ 136 := by
       rw [show (136 : ℕ) = 17 * 8 by norm_num, pow_mul]
-    _ ≤ 2 ^ 1837 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
-    _ ≤ 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 :=
+    _ ≤ 2 ^ 1833 := Nat.pow_le_pow_right (by norm_num) (by norm_num)
+    _ ≤ 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 :=
       Nat.le_mul_of_pos_right _ (pow_pos (by norm_num) _)
 private theorem preliminary_lowOrder_coefficient_eq_cutoff_sq :
     2 ^ 10 * (48 ^ 3 + 1) ^ 20 * preliminaryDivisorMomentConstant ^ 8 =
-      (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
+      (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 := by
   rw [preliminaryDivisorMomentConstant_eq]
-  have htwo458 : (2 ^ 458) ^ 8 = 2 ^ 3664 := by
-    rw [show (3664 : ℕ) = 458 * 8 by norm_num, pow_mul]
-  have htwo : 2 ^ 10 * (2 ^ 458) ^ 8 = 2 ^ 3674 := by
-    rw [htwo458]
-    exact (pow_add 2 10 3664).symm.trans (by norm_num)
-  have htwo' : (2 ^ 1837) ^ 2 = 2 ^ 3674 := by
-    rw [show (3674 : ℕ) = 1837 * 2 by norm_num, pow_mul]
+  have htwo457 : (2 ^ 457) ^ 8 = 2 ^ 3656 := by
+    rw [show (3656 : ℕ) = 457 * 8 by norm_num, pow_mul]
+  have htwo : 2 ^ 10 * (2 ^ 457) ^ 8 = 2 ^ 3666 := by
+    rw [htwo457]
+    exact (pow_add 2 10 3656).symm.trans (by norm_num)
+  have htwo' : (2 ^ 1833) ^ 2 = 2 ^ 3666 := by
+    rw [show (3666 : ℕ) = 1833 * 2 by norm_num, pow_mul]
   have hbase :
       (48 ^ 3 + 1) ^ 20 = ((48 ^ 3 + 1) ^ 10) ^ 2 := by
     rw [show (20 : ℕ) = 10 * 2 by norm_num, pow_mul]
   calc
-    2 ^ 10 * (48 ^ 3 + 1) ^ 20 * (2 ^ 458) ^ 8 =
-        (2 ^ 10 * (2 ^ 458) ^ 8) * (48 ^ 3 + 1) ^ 20 := by ring
-    _ = 2 ^ 3674 * (48 ^ 3 + 1) ^ 20 := by rw [htwo]
-    _ = (2 ^ 1837) ^ 2 * ((48 ^ 3 + 1) ^ 10) ^ 2 := by
+    2 ^ 10 * (48 ^ 3 + 1) ^ 20 * (2 ^ 457) ^ 8 =
+        (2 ^ 10 * (2 ^ 457) ^ 8) * (48 ^ 3 + 1) ^ 20 := by ring
+    _ = 2 ^ 3666 * (48 ^ 3 + 1) ^ 20 := by rw [htwo]
+    _ = (2 ^ 1833) ^ 2 * ((48 ^ 3 + 1) ^ 10) ^ 2 := by
       rw [htwo', hbase]
-    _ = (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 2 := by rw [mul_pow]
+    _ = (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 := by rw [mul_pow]
 /-- The simultaneous divisor count is smaller than the eighth root of `p`. -/
 theorem preliminary_divisor_sum_lt_rpow_one_div_eight
     {p : ℕ} (hp : preliminaryStrongApproximationCutoff ≤ p) :
     (((p - 1).divisors.card + (p + 1).divisors.card : ℕ) : ℝ) <
       (p : ℝ) ^ (1 / 8 : ℝ) := by
   let T := (p - 1).divisors.card + (p + 1).divisors.card
-  let Q := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10
+  let Q := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10
   have hpTwo : 2 ≤ p := by
     have := preliminaryCutoff_gt_one.trans_le hp
     omega
@@ -230,7 +230,7 @@ theorem preliminary_corvajaZannier_divisor_term_lt_rpow_one_div_six
         ((p - 1).divisors.card + (p + 1).divisors.card) : ℕ) <
       (p : ℝ) ^ (1 / 6 : ℝ) := by
   let T := (p - 1).divisors.card + (p + 1).divisors.card
-  let Q := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10
+  let Q := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10
   have hpTwo : 2 ≤ p := by
     have := preliminaryCutoff_gt_one.trans_le hp
     omega
@@ -273,7 +273,7 @@ theorem preliminary_weighted_divisor_sum_sq_lt_rpow_one_div_three
     ((68 * ((p - 1).divisors.card + (p + 1).divisors.card) ^ 2 : ℕ) : ℝ) <
       (p : ℝ) ^ (1 / 3 : ℝ) := by
   let T := (p - 1).divisors.card + (p + 1).divisors.card
-  let Q := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10
+  let Q := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10
   have hpTwo : 2 ≤ p := by
     have := preliminaryCutoff_gt_one.trans_le hp
     omega
@@ -317,7 +317,7 @@ theorem preliminary_small_fixed_lt_rpow_one_div_eight
   have hpowNat : fixed ^ 8 < p := by
     calc
       fixed ^ 8 ≤ 100522 ^ 8 := Nat.pow_le_pow_left hfixed _
-      _ ≤ 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 :=
+      _ ≤ 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 :=
         preliminary_fixed_pow_eight_le_cutoff
       _ < p := preliminaryCutoff_constant_lt hp
   have hpNonnegative : (0 : ℝ) ≤ p := by positivity
@@ -511,7 +511,7 @@ theorem preliminary_lowOrder_divisorSensitive_cube
       ((p - 1).divisors.card + (p + 1).divisors.card)) ^ 3 < d := by
   let T := (p - 1).divisors.card + (p + 1).divisors.card
   let B := 48 ^ 3 + 1
-  let Q := 2 ^ 1837 * B ^ 10
+  let Q := 2 ^ 1833 * B ^ 10
   have hpTwo : 2 ≤ p := by
     have := preliminaryCutoff_gt_one.trans_le hp
     omega
@@ -564,7 +564,7 @@ theorem preliminary_lowOrder_divisorSensitive_cube
       _ = Q ^ 2 * p ^ 8 := by
         change (2 ^ 10 * (48 ^ 3 + 1) ^ 20 *
           preliminaryDivisorMomentConstant ^ 8) * p ^ 8 =
-          (2 ^ 1837 * (48 ^ 3 + 1) ^ 10) ^ 2 * p ^ 8
+          (2 ^ 1833 * (48 ^ 3 + 1) ^ 10) ^ 2 * p ^ 8
         exact congrArg (fun n : ℕ => n * p ^ 8)
           preliminary_lowOrder_coefficient_eq_cutoff_sq
   have hQ : Q < p := by

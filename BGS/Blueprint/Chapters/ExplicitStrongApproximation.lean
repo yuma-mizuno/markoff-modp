@@ -44,14 +44,13 @@ replaces the paper's Nicolas and Euler-totient estimates by a fully elementary
 tenth-moment divisor bound.  Lean proves
 
 $$`
-  \tau(n)^{10}\le 2^{448}n,
-  \qquad K_{10}=2^{458},
-  \qquad p_0=2^{1837}(48^3+1)^{10}+1.
+  \tau(n)^{10}\le 2^{447}n,
+  \qquad K_{10}=2^{457},
+  \qquad p_0=2^{1833}(48^3+1)^{10}+1.
 `
 
-The actual sum of the prime-factor penalties is $`447`; the displayed divisor
-bound rounds this up to $`448`.  The resulting $`p_0` is approximately
-$`2.6876853606811626\times10^{603}`.  It is larger than the paper's preliminary
+The prime-factor penalties sum exactly to $`447`.  The resulting $`p_0` is
+approximately $`1.6798033504257266\times10^{602}`.  It is larger than the paper's preliminary
 $`10^{532}` threshold, because no Nicolas inequality or explicit lower bound
 for $`\varphi` is imported.  It is nevertheless far smaller than the former
 formal ninth-moment cutoff and formalizes the main all-divisors idea without
@@ -72,11 +71,11 @@ source := {
 For every positive natural number $`n`, the prime-factor penalty estimate gives
 
 $$`
-  \tau(n)^{10}\le 2^{448}n.
+  \tau(n)^{10}\le 2^{447}n.
 `
 
 Consequently, with $`T=\tau(p-1)+\tau(p+1)`, convexity gives
-$`T^{10}\le 2^{458}p`.  This is the elementary substitute for the paper's
+$`T^{10}\le 2^{457}p`.  This is the elementary substitute for the paper's
 sharper analytic use of Nicolas' divisor bound.
 :::
 
@@ -87,10 +86,10 @@ prime thresholds
 $`2,3,5,7,11,13,17,23,31,43,67,131,257,521,1024`; beyond $`1024` it is zero.
 Each band is a finite initial check followed by ratio induction.  A kernel-checked
 finite calculation proves that the penalties over all primes below $`1024`
-sum to $`447`, hence at most $`448`.  Multiplying over the prime factorization
+sum exactly to $`447`.  Multiplying over the prime factorization
 proves the displayed estimate.  Finally,
 $`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
-$`(p-1)+(p+1)=2p` give $`T^{10}\le2^{458}p`.
+$`(p-1)+(p+1)=2p` give $`T^{10}\le2^{457}p`.
 :::
 :::lemma_ "rankin_1248_finite_domain" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.rankinCutoff1248CapTable_check, BGS.NumberTheory.rankinCutoff1248CapTable_product, BGS.NumberTheory.jointOddPrimeList_length_lt_275_of_lt_two_pow_1248, BGS.NumberTheory.actualRankinExponentSkeleton_admissible_1248") (tags := "proved-in-lean, explicit, finite-domain, conditional-route, rankin-envelope") (priority := "high")
 The new Rankin-envelope route has a proved finite-domain boundary at 2^1248.
@@ -206,7 +205,7 @@ $`100522<p^{1/8}` supply the cage argument.
 :::
 
 :::proof "explicit_numeric_certificates"
-Write $`B=48^3+1`, $`K=2^{458}`, and $`Q=2^{1837}B^{10}`.  The tenth-moment
+Write $`B=48^3+1`, $`K=2^{457}`, and $`Q=2^{1833}B^{10}`.  The tenth-moment
 estimate gives $`T^{10}\le Kp`.  Hence
 $`(48T)^{60}<p^{10}` and $`(68T^2)^{30}<p^{10}`, proving the one-sixth and
 one-third bounds.
@@ -326,7 +325,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^{1837}(48^3+1)^{10}+1\le p,
+  2^{1833}(48^3+1)^{10}+1\le p,
 `
 
 the action of $`\Gamma` on $`X^*(\mathbb F_p)` is transitive.  The declaration
@@ -365,7 +364,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^{1837}(48^3+1)^{10}+1\le p,
+  2^{1833}(48^3+1)^{10}+1\le p,
 `
 
 coordinatewise reduction is surjective:

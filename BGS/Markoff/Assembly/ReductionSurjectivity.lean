@@ -23,7 +23,7 @@ theorem markoffReduction_surjective_of_concreteExplicitBound
 /-- Strong approximation obtained from the elementary preliminary route. -/
 theorem markoffReduction_surjective_of_concretePreliminaryBound
     (p : ℕ) (hpPrime : p.Prime)
-    (hp : (2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
+    (hp : (2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1) ≤ p) :
     Function.Surjective (markoffReduction p) :=
   (puncturedMarkoffTransitiveAt_iff_markoffReduction_surjective p hpPrime).mp
     (puncturedMarkoffTransitiveAt_of_concretePreliminaryBound p hpPrime hp)
@@ -31,7 +31,7 @@ theorem markoffReduction_surjective_of_concretePreliminaryBound
 /-- The elementary preliminary-route theorem in the public functor
 presentation used by the Comparator challenge. -/
 theorem reduction_surjective_of_explicitBound :
-    let p₀ := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1
+    let p₀ := 2 ^ 1833 * (48 ^ 3 + 1) ^ 10 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (BGS.Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by

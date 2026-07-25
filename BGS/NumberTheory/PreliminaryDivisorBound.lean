@@ -7,7 +7,7 @@ import Mathlib.Tactic.IntervalCases
 For the paper's preliminary all-divisors route, the generic factorization
 constant in `ExplicitDivisorBound.lean` is much too large.  Here each prime
 factor is charged a small power-of-two penalty.  The penalties over primes below
-`1024` sum to `447`, rounded to `448`; primes at least `1024` need no penalty.
+`1024` sum exactly to `447`; primes at least `1024` need no penalty.
 -/
 
 namespace BGS.NumberTheory
@@ -323,7 +323,7 @@ private theorem factorization_succ_pow_ten_le
 set_option maxRecDepth 100000 in
 set_option maxHeartbeats 2000000 in
 private theorem sum_preliminaryPrimePenalty_le (n : ℕ) :
-    ∑ p ∈ n.primeFactors, preliminaryPrimePenalty p ≤ 448 := by
+    ∑ p ∈ n.primeFactors, preliminaryPrimePenalty p ≤ 447 := by
   let smallFactors :=
     n.primeFactors.filter fun p ↦ p < 1024
   let allSmallPrimes :=
@@ -350,16 +350,16 @@ private theorem sum_preliminaryPrimePenalty_le (n : ℕ) :
     Finset.sum_le_sum_of_subset_of_nonneg hsubset
       (fun _ _ _ ↦ Nat.zero_le _)
   have htotal :
-      (∑ p ∈ allSmallPrimes, preliminaryPrimePenalty p) ≤ 448 := by
+      (∑ p ∈ allSmallPrimes, preliminaryPrimePenalty p) ≤ 447 := by
     decide
   rw [← hsumEq]
   exact hle.trans htotal
 
 /-- The divisor function satisfies the uniform elementary estimate
-`τ(n)^10 ≤ 2^448 n`. -/
+`τ(n)^10 ≤ 2^447 n`. -/
 theorem card_divisors_pow_ten_le_preliminary_constant_mul
     (n : ℕ) (hn : n ≠ 0) :
-    n.divisors.card ^ 10 ≤ 2 ^ 448 * n := by
+    n.divisors.card ^ 10 ≤ 2 ^ 447 * n := by
   rw [Nat.card_divisors hn, ← Finset.prod_pow]
   calc
     (∏ p ∈ n.primeFactors, (n.factorization p + 1) ^ 10) ≤
@@ -372,7 +372,7 @@ theorem card_divisors_pow_ten_le_preliminary_constant_mul
       rw [Finset.prod_mul_distrib,
         Finset.prod_pow_eq_pow_sum,
         ← Nat.prod_primeFactors_pow_factorization hn]
-    _ ≤ 2 ^ 448 * n :=
+    _ ≤ 2 ^ 447 * n :=
       Nat.mul_le_mul_right n <|
         Nat.pow_le_pow_right (by norm_num)
           (sum_preliminaryPrimePenalty_le n)
