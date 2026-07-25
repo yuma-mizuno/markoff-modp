@@ -9,6 +9,7 @@ import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
 import BGS.NumberTheory.RankinCutoff1248Skeleton
+import BGS.NumberTheory.RankinJointEnvelopeSummaryCoverage
 import Verso
 import VersoManual
 import VersoBlueprint
@@ -108,6 +109,20 @@ assert that every admissible skeleton is closed by a domination leaf, and it
 does not state transitivity or reduction surjectivity below 2^1248.  The
 remaining obligation is an exhaustive, kernel-checked leaf certificate
 together with its composition into the exact-order endpoint.
+:::
+:::lemma_ "rankin_scalar_summary_certificates" (parent := "explicit_strong_approximation") (uses := "rankin_1248_finite_domain") (lean := "BGS.NumberTheory.RankinJointEnvelopeSummary, BGS.NumberTheory.RankinJointEnvelopeSummary.Dominates, BGS.NumberTheory.RankinJointEnvelopeSummary.jointEnvelope_leaf_of_dominates, BGS.NumberTheory.RankinJointEnvelopeSummaryCertificate.jointEnvelope_leaf_of_check_of_covers, BGS.Markoff.prime_le_of_rankinJointEnvelopeSummaryCertificate") (tags := "proved-in-lean, explicit, certificate-architecture, conditional-route, rankin-envelope") (priority := "high")
+The exhaustive search no longer has to emit valid synthetic factorization
+profiles.  A checked leaf records only two monotone scalars: an upper bound
+for the joint Rankin failure square and a lower bound for the joint neighboring
+product.  One such row may dominate an arbitrary family of exponent skeletons.
+
+Lean proves that either terminal inequality transports from the scalar row to
+the actual matched profile.  A summary certificate consists only of a cutoff
+and a list of rows; reduction checks all leaf inequalities, while a separate
+coverage theorem must exhibit a dominating row for every actual profile.
+Thus numerical checking and mathematical exhaustiveness remain distinct.
+The final exact-order wrapper is proved, but no concrete exhaustive summary
+list for 2^1248 is claimed at this node.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
