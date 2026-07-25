@@ -118,12 +118,9 @@ theorem jointOddPrimeList_length_lt_of_capTable_prod_gt
   have hsupportNeighbors := jointOddPrimeList_prod_le_neighbors_mul hp
   exact (not_lt_of_ge (htableSupport.trans hsupportNeighbors)) hproduct
 
-theorem jointOddPrimeList_length_lt_of_lt_pow_of_capTable
-    {p exponent : ℕ} {table : RankinPositionalCapTable}
-    (hpOne : 1 < p) (hp : p < 2 ^ exponent)
-    (hvalid : table.Valid)
-    (hproduct : 2 ^ (2 * exponent) < table.oddPrimeFloors.prod) :
-    (jointOddPrimeList p).length < table.oddPrimeFloors.length := by
+theorem neighbors_mul_lt_two_pow_two_mul
+    {p exponent : ℕ} (hpOne : 1 < p) (hp : p < 2 ^ exponent) :
+    (p - 1) * (p + 1) < 2 ^ (2 * exponent) := by
   have hminus : p - 1 < 2 ^ exponent :=
     (Nat.sub_le p 1).trans_lt hp
   have hplus : p + 1 ≤ 2 ^ exponent := by omega
@@ -137,8 +134,16 @@ theorem jointOddPrimeList_length_lt_of_lt_pow_of_capTable
     rw [← pow_add]
     congr 1
     omega
+  rwa [hpower] at hneighbors
+
+theorem jointOddPrimeList_length_lt_of_lt_pow_of_capTable
+    {p exponent : ℕ} {table : RankinPositionalCapTable}
+    (hpOne : 1 < p) (hp : p < 2 ^ exponent)
+    (hvalid : table.Valid)
+    (hproduct : 2 ^ (2 * exponent) < table.oddPrimeFloors.prod) :
+    (jointOddPrimeList p).length < table.oddPrimeFloors.length := by
+  have hneighbors := neighbors_mul_lt_two_pow_two_mul hpOne hp
   apply jointOddPrimeList_length_lt_of_capTable_prod_gt hpOne hvalid
-  rw [hpower] at hneighbors
   exact hneighbors.trans hproduct
 
 end BGS.NumberTheory
