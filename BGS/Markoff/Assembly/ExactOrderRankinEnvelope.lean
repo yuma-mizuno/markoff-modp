@@ -1,5 +1,6 @@
 import BGS.Markoff.Assembly.ExactOrderEulerSevenComplementObstruction
 import BGS.NumberTheory.RankinProfileCertificate
+import BGS.NumberTheory.RankinProfileMatching
 import BGS.NumberTheory.TruncatedOrderTotientRankinFactorization
 
 /-!
@@ -241,5 +242,48 @@ theorem prime_le_of_rankinNeighborProfile_closes
       Nat.cast_mul, Nat.cast_add, Nat.cast_ofNat,
       Nat.cast_one] using hcloses
   exact (not_lt_of_ge (hcutoffCast.trans hprofileSquare)) hclosesCast
+
+/-- The semantic matching theorem discharges both majorization hypotheses of
+`prime_le_of_rankinNeighborProfile_closes`.  A valid, closing profile that
+matches the actual factorizations of `p - 1` and `p + 1` therefore bounds the
+prime directly. -/
+theorem prime_le_of_matching_rankinNeighborProfile_closes
+    {p bound cutoff : ℕ}
+    (hpPrime : p.Prime) (hpTwo : 2 < p)
+    (hroot :
+      8 * p ≤ (combinedTruncatedOrderTotientSum p bound) ^ 2)
+    (hboundWitness :
+      bound ≤ 189 * (middleGameMaximalOrders p bound).card ^ 3)
+    (profile : RankinNeighborProfile)
+    (hprofile : profile.Valid)
+    (hcloses : profile.ClosesCutoff cutoff)
+    (hmatch : profile.Matches p) :
+    p ≤ cutoff := by
+  have hp : 1 < p := by omega
+  obtain ⟨assignment, hweightNonneg, hweightPower,
+      hminusEuler, hplusEuler⟩ :=
+    profile.exists_assignedPrimeWeight_bounds
+      hpPrime hpTwo hprofile hmatch
+  have hdivisorEq :=
+    profile.jointDivisorCount_eq_neighborCards
+      hpPrime hpTwo hmatch
+  apply prime_le_of_rankinNeighborProfile_closes
+    hp hroot hboundWitness profile hprofile hcloses
+    (assignedPrimeWeight p profile assignment)
+    hweightNonneg hweightPower
+  · change
+      (p - 1).divisors.card + (p + 1).divisors.card ≤
+        profile.jointDivisorCount
+    exact le_of_eq hdivisorEq.symm
+  · change
+      ((p - 1).factorization.prod fun prime exponent =>
+          rankinPrimePowerFactor prime exponent
+            (assignedPrimeWeight p profile assignment prime)) +
+        ((p + 1).factorization.prod fun prime exponent =>
+          rankinPrimePowerFactor prime exponent
+            (assignedPrimeWeight p profile assignment prime)) ≤
+        profile.coarseEulerProduct .minus +
+          profile.coarseEulerProduct .plus
+    exact add_le_add hminusEuler hplusEuler
 
 end BGS.Markoff
