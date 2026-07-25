@@ -8,6 +8,7 @@ import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
 import BGS.Markoff.Assembly.RankinWidthEnvelope
 import BGS.Markoff.Assembly.RankinJointAntichainWidth
+import BGS.Markoff.Assembly.RankinJointAntichainSperner
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
 import BGS.NumberTheory.RankinCutoff1248Profile
@@ -161,6 +162,18 @@ nontrivial antichain plus two.  The new theorem feeds that quantity directly
 into the width-sensitive Rankin endpoint.  The remaining numerical task is
 to certify a sharp width bound for this antichain over the finite 2^1248
 profile domain.
+:::
+:::lemma_ "rankin_joint_antichain_sperner_handoff" (parent := "explicit_strong_approximation") (uses := "rankin_joint_antichain_width") (lean := "BGS.Markoff.nontrivialMiddleGameMaximalOrders_card_le_centralRank_of_encoding, BGS.Markoff.bound_le_rankinCentralRankWitnessCap_of_encoding") (tags := "proved-in-lean, explicit, sperner, central-rank, conditional-route, rankin-envelope") (priority := "high")
+The remaining width estimate has been reduced to one explicit factorization
+encoding.  For any finite ranked poset with a symmetric-chain decomposition,
+an injective encoding of the joint maximal orders which reflects comparison
+back to divisibility sends the joint antichain into an antichain of that
+poset.  Lean then bounds its size by the central rank and inserts that central
+rank, plus the two exceptional divisors, into the Rankin witness cap.
+
+Thus no analytic estimate remains between a divisor-exponent encoding and the
+new cutoff leaf.  Constructing and exhaustively checking the concrete
+2^1248 encoding is still a separate arithmetic certificate obligation.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
