@@ -29,7 +29,7 @@ For a commutative semiring $R$, define the Markoff surface by
 Let
 
 ```math
-p_0 = 2^{1837}(48^3+1)^{10}+1.
+p_0 = 35721^5\,2^{1547}\,32769^2+1.
 ```
 
 **Theorem** (Strong approximation for large primes). For every prime $p$ with $p_0 \le p$, the map
@@ -42,7 +42,7 @@ p_0 = 2^{1837}(48^3+1)^{10}+1.
 
 is surjective.
 
-The statement is formlized as
+The statement is formalized as
 ```lean4
 import Mathlib
 
@@ -58,7 +58,7 @@ abbrev markoffNatToModp (p : ℕ) : MarkoffNat → MarkoffModp p :=
   fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨x, y, z⟩, by simpa using congrArg (fun n : ℕ ↦ (n : ZMod p)) h⟩
 
 theorem markoff_reduction_surjective_of_large_prime :
-    let p₀ := 2 ^ 1837 * (48 ^ 3 + 1) ^ 10 + 1
+    let p₀ := 35721 ^ 5 * 2 ^ 1547 * 32769 ^ 2 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p → Function.Surjective (markoffNatToModp p) := by
   sorry
 
@@ -67,13 +67,23 @@ end Challenge
 and its proof is given as
 [`Comparator/Solution.lean`](Comparator/Solution.lean).
 
-The displayed cutoff is a 604-digit integer, approximately
-$2.6876853606811626\times 10^{603}$.  It formalizes the paper's preliminary
-all-divisors Corvaja--Zannier route with the fully elementary estimate
-$\tau(n)^{10}\le 2^{448}n$.  The paper's sharper preliminary threshold
-$p>10^{532}$ instead uses Nicolas' explicit divisor bound and an explicit
-Euler-totient estimate; those analytic numerical estimates are not imported
-into this formal endpoint.
+The displayed cutoff is a 498-digit integer, approximately
+$3.0828167547327980\times 10^{497}$.  It combines the formalized Euler-seven
+maximal-divisor complement argument with the fully elementary weighted moment
+
+```math
+\tau(n)^{20}\le 2^{796}n^2.
+```
+
+For odd $p$, the exact neighboring-order identity
+$\tau(p-1)\tau(p+1)=2\tau((p^2-1)/2)$ then yields a joint sum bound with
+leading constant $2^{796}$.  No divisor table, factorization list, or large
+finite certificate is used.  This improves the preceding formal cutoff by a
+factor of approximately $1.1042\times 10^{71}$.
+
+The paper's preliminary non-certificate threshold $p>10^{532}$ uses Nicolas'
+explicit divisor bound and an explicit Euler-totient estimate.  The new formal
+cutoff is approximately $3.24\times10^{34}$ times smaller.
 
 ## Improving the cutoff
 

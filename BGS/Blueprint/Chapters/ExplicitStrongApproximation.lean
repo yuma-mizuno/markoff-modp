@@ -5,9 +5,14 @@ import BGS.Markoff.ExplicitNumericCertificates
 import BGS.Markoff.PreliminaryEndgame
 import BGS.Markoff.PreliminaryNumerics
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
+import BGS.Markoff.Assembly.CoarseSupportSurjectivity
 import BGS.Markoff.Assembly.ReductionSurjectivity
+import BGS.Markoff.Assembly.RankinWidthEnvelope
+import BGS.Markoff.Assembly.RankinJointAntichainWidth
+import BGS.Markoff.Assembly.RankinJointAntichainSperner
 import BGS.NumberTheory.ExplicitDivisorBound
 import BGS.NumberTheory.PreliminaryDivisorBound
+import BGS.NumberTheory.RankinCutoff1248Profile
 import Verso
 import VersoManual
 import VersoBlueprint
@@ -35,23 +40,33 @@ in the BGS method effective.  Their introduction first obtains connectivity
 above $`10^{532}`, then replaces the total-divisor count by maximal divisors
 and reports an optimized primorial/product cutoff.
 
-The formal route below follows the preliminary all-divisors mechanism but
-replaces the paper's Nicolas and Euler-totient estimates by a fully elementary
-tenth-moment divisor bound.  Lean proves
+The formal arithmetic input replaces the paper's Nicolas and Euler-totient
+estimates with fully elementary prime-penalty moments.  Lean first proves
 
 $$`
-  \tau(n)^{10}\le 2^{448}n,
-  \qquad K_{10}=2^{458},
-  \qquad p_0=2^{1837}(48^3+1)^{10}+1.
+  \tau(n)^{10}\le 2^{447}n,
+  \qquad \tau(n)^{20}\le 2^{796}n^2.
 `
 
-The actual sum of the prime-factor penalties is $`447`; the displayed divisor
-bound rounds this up to $`448`.  The resulting $`p_0` is approximately
-$`2.6876853606811626\times10^{603}`.  It is larger than the paper's preliminary
-$`10^{532}` threshold, because no Nicolas inequality or explicit lower bound
-for $`\varphi` is imported.  It is nevertheless far smaller than the former
-formal ninth-moment cutoff and formalizes the main all-divisors idea without
-using maximal divisors, the finite enumeration, or Algorithm 1.
+The tenth-moment bound gives the direct preliminary all-divisors checkpoint
+$`2^{1833}(48^3+1)^{10}+1`.  The weighted twentieth moment is strictly
+stronger than simply squaring that estimate: keeping the fractional rounding
+across prime bands lowers the aggregate exponent from $`894` to $`796`.
+Combining it with the exact gcd-two identity for the neighboring orders and
+the formalized Euler-seven maximal-divisor complement argument closes the last
+cubic obstruction without a divisor table and gives
+
+$$`
+  p_0=35721^5\,2^{1547}\,32769^2+1
+     \approx 3.0828167547327980\times10^{497}.
+`
+
+This is smaller than the preceding formal endpoint by a factor of
+approximately $`1.1042\times10^{71}`.  It is also approximately
+$`3.24\times10^{34}` times below the paper's non-certificate threshold
+$`10^{532}`.  No Nicolas inequality, explicit lower bound for $`\varphi`,
+finite maximal-divisor enumeration, or Algorithm 1 certificate is imported
+into this endpoint.
 :::lemma_ "explicit_elementary_divisor_bound" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.preliminaryPrimePenalty, BGS.NumberTheory.card_divisors_pow_ten_le_preliminary_constant_mul, BGS.Markoff.preliminaryDivisorMomentConstant, BGS.Markoff.preliminaryDivisorMomentConstant_eq, BGS.Markoff.preliminary_divisor_sum_pow_ten_le") (tags := "proved-in-lean, explicit, arithmetic, paper-preliminary-route") (priority := "high")
 %%%
 source := {
@@ -68,11 +83,11 @@ source := {
 For every positive natural number $`n`, the prime-factor penalty estimate gives
 
 $$`
-  \tau(n)^{10}\le 2^{448}n.
+  \tau(n)^{10}\le 2^{447}n.
 `
 
 Consequently, with $`T=\tau(p-1)+\tau(p+1)`, convexity gives
-$`T^{10}\le 2^{458}p`.  This is the elementary substitute for the paper's
+$`T^{10}\le 2^{457}p`.  This is the elementary substitute for the paper's
 sharper analytic use of Nicolas' divisor bound.
 :::
 
@@ -83,10 +98,170 @@ prime thresholds
 $`2,3,5,7,11,13,17,23,31,43,67,131,257,521,1024`; beyond $`1024` it is zero.
 Each band is a finite initial check followed by ratio induction.  A kernel-checked
 finite calculation proves that the penalties over all primes below $`1024`
-sum to $`447`, hence at most $`448`.  Multiplying over the prime factorization
+sum exactly to $`447`.  Multiplying over the prime factorization
 proves the displayed estimate.  Finally,
 $`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
-$`(p-1)+(p+1)=2p` give $`T^{10}\le2^{458}p`.
+$`(p-1)+(p+1)=2p` give $`T^{10}\le2^{457}p`.
+:::
+
+:::lemma_ "weighted_joint_neighbor_divisor_moment" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.weightedPrimePenaltyTwenty, BGS.NumberTheory.card_divisors_pow_twenty_le_weighted_constant_mul_sq, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_of_odd, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_pow_twenty_le, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_pow_ten_weighted_le, BGS.NumberTheory.neighboringDivisorSumWeightedMomentConstant, BGS.NumberTheory.neighboringDivisorSumWeightedMomentConstant_eq, BGS.NumberTheory.card_divisors_pred_add_card_divisors_succ_pow_twenty_le") (tags := "proved-in-lean, explicit, arithmetic, certificate-free, formal-refinement") (priority := "high")
+The formal route strengthens the preceding estimate by charging the doubled
+number weight before rounding each prime penalty, rather than squaring the
+already-rounded tenth-moment bound.  Lean proves
+
+$$`
+  \tau(n)^{20}\le2^{796}n^2.
+`
+
+The doubled penalties over the prime bands sum to $`796`, instead of
+$`2\cdot447=894`.  For odd $`p`, Lean also proves the exact identity
+
+$$`
+  \tau(p-1)\tau(p+1)=2\tau((p^2-1)/2)
+`
+
+and uses it to control the product of the two neighboring divisor counts.
+Writing $`T=\tau(p-1)+\tau(p+1)`, a balanced/dominant split then gives
+
+$$`
+  T^{20}\le Dp^2,
+  \qquad D=2^{796}+2^{781}=2^{781}\cdot32769.
+`
+:::
+:::theorem "euler_seven_coarse_support_frontier" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound, corvaja_zannier_existing_markoff_adapter, chen_orbit_divisibility_via_martin") (lean := "BGS.Markoff.maximalDivisorCountSum, BGS.NumberTheory.eight_mul_le_35721_mul_fourth_of_count_degree_squareEnvelope, BGS.Markoff.puncturedMarkoffTransitiveAt_of_nonparabolicComplement_eulerSevenPairedMaximalDivisor_frontier, BGS.Markoff.puncturedMarkoffTransitiveAt_of_eulerSevenSquareEnvelope_coarseSupport, BGS.Markoff.markoffReduction_surjective_of_eulerSevenSquareEnvelope_coarseSupport") (tags := "proved-in-lean, explicit, maximal-divisors, euler-seven, dependency-frontier") (priority := "high")
+%%%
+source := {
+  document := "eddy-fuchs-litman-martin-tripeny"
+  spans := #[
+    {
+      page := "PDF pp. 3--6; Section 2, maximal-divisor middle game and effective connectivity route; author TeX lines 170--233"
+      pdf := some { path := "https://arxiv.org/pdf/2308.07579v1" }
+    }
+  ]
+}
+%%%
+
+The refined middle game counts only divisibility-maximal candidate orders
+from $`p-1` and $`p+1`.  The Euler-seven paired Corvaja--Zannier step turns a
+failed increase at order $`d` into
+
+$$`
+  8p\le 35721\,S(d)^4,
+`
+
+whenever $`S(d)` bounds the square of the joint maximal-divisor count.  Above
+$`2^{756}`, separate coarse estimates discharge the linear middle game,
+primitive-trace endgame, cage connectivity, base-point construction, and
+half-order comparison.  Lean therefore proves transitivity and natural
+reduction surjectivity from only the displayed square-envelope family.
+
+This node is a completed conditional frontier.  It does not by itself assert
+that a particular envelope satisfies the global strict inequality; that final
+arithmetic implication is attached in the next node.
+:::
+
+:::theorem "certificate_free_coarse_support_cutoff" (parent := "explicit_strong_approximation") (uses := "weighted_joint_neighbor_divisor_moment, euler_seven_coarse_support_frontier") (lean := "BGS.Markoff.weightedCoarseSupportStrongApproximationOpenCutoff, BGS.Markoff.weightedCoarseSupportStrongApproximationCutoff, BGS.Markoff.weighted_35721_mul_divisorSum_pow_eight_lt, BGS.Markoff.maximalDivisorCountSum_sq_le_divisorSum_sq, BGS.Markoff.twoPow756_lt_of_weightedCoarseSupportOpenCutoff_lt, BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportOpenCutoff, BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportBound") (tags := "proved-in-lean, explicit, dependency-complete, certificate-free, numerical-cutoff") (priority := "high")
+Set $`T=\tau(p-1)+\tau(p+1)` and use the constant square envelope
+$`S(d)=T^2`.  Every maximal-divisor count is at most the corresponding total
+divisor count, so this envelope is valid for all $`d`.  Put
+$`D=2^{796}+2^{781}=2^{781}\cdot32769`.  The weighted neighboring-divisor
+moment gives $`T^{20}\le Dp^2`.  If the Euler-seven obstruction failed, then
+
+$$`
+  (8p)^5\le 35721^5T^{40}
+       \le 35721^5(Dp^2)^2.
+`
+
+Canceling $`2^{15}p^4` and expanding $`D^2` gives
+$`p\le35721^5 2^{1547}32769^2`.  Hence the strict obstruction inequality
+holds above this open cutoff.  The cutoff also dominates $`2^{756}`, so the
+coarse-support frontier applies and yields reduction surjectivity.  The proof
+uses kernel-checked symbolic arithmetic and a fixed small-prime band check; it
+has no cutoff-sized factorization list or divisor-profile certificate.
+:::
+
+:::lemma_ "rankin_1248_finite_domain" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.rankinCutoff1248CapTable_check, BGS.NumberTheory.rankinCutoff1248CapTable_product, BGS.NumberTheory.jointOddPrimeList_length_lt_275_of_lt_two_pow_1248, BGS.NumberTheory.actualRankinExponentSkeleton_admissible_1248") (tags := "proved-in-lean, explicit, finite-domain, conditional-route, rankin-envelope") (priority := "high")
+The new Rankin-envelope route has a proved finite-domain boundary at 2^1248.
+Lean checks that the listed numbers from 3 through 1783 are exactly the first
+275 odd primes and that their product is larger than 2^2496.  If p is less
+than 2^1248, then (p-1)(p+1) is less than 2^2496, so the joint odd-prime
+support of p-1 and p+1 has fewer than 275 entries.
+
+After erasing which neighbor owns each odd prime and replacing its prime value
+by the corresponding positional Rankin cap, every actual prime in this range
+therefore maps to an executable exponent skeleton.  The skeleton records the
+two 2-adic exponents, the positive odd exponents, the neighboring
+2-factorization shape, the support bound, and the same global product budget.
+This is a new formal reduction rather than a theorem quoted from the paper.
+
+This node proves coverage of the finite search domain only.  It does not yet
+assert that every admissible skeleton is closed by a domination leaf, and it
+does not state transitivity or reduction surjectivity below 2^1248.  The
+remaining obligation is an exhaustive, kernel-checked leaf certificate
+together with its composition into the exact-order endpoint.
+:::
+:::lemma_ "rankin_scalar_summary_certificates" (parent := "explicit_strong_approximation") (uses := "rankin_1248_finite_domain") (lean := "BGS.NumberTheory.RankinJointEnvelopeSummary, BGS.NumberTheory.RankinJointEnvelopeSummary.Dominates, BGS.NumberTheory.RankinJointEnvelopeSummary.jointEnvelope_leaf_of_dominates, BGS.NumberTheory.RankinJointEnvelopeSummaryCertificate.jointEnvelope_leaf_of_check_of_covers, BGS.Markoff.prime_le_of_rankinJointEnvelopeSummaryCertificate") (tags := "proved-in-lean, explicit, certificate-architecture, conditional-route, rankin-envelope") (priority := "high")
+The exhaustive search no longer has to emit valid synthetic factorization
+profiles.  A checked leaf records only two monotone scalars: an upper bound
+for the joint Rankin failure square and a lower bound for the joint neighboring
+product.  One such row may dominate an arbitrary family of exponent skeletons.
+
+Lean proves that either terminal inequality transports from the scalar row to
+the actual matched profile.  A summary certificate consists only of a cutoff
+and a list of rows; reduction checks all leaf inequalities, while a separate
+coverage theorem must exhibit a dominating row for every actual profile.
+Thus numerical checking and mathematical exhaustiveness remain distinct.
+The final exact-order wrapper is proved, but no concrete exhaustive summary
+list for 2^1248 is claimed at this node.
+:::
+:::lemma_ "rankin_actual_profile_handoff" (parent := "explicit_strong_approximation") (uses := "rankin_1248_finite_domain, rankin_scalar_summary_certificates") (lean := "BGS.NumberTheory.RankinExponentSkeleton.jointEnvelopeRootCap, BGS.NumberTheory.RankinExponentSkeleton.certifiedProfile_jointEnvelopeValid, BGS.NumberTheory.actualRankinProfile1248_matches, BGS.NumberTheory.actualRankinProfile1248_valid, BGS.NumberTheory.actualRankinSkeletonSummary1248_dominates") (tags := "proved-in-lean, explicit, semantic-handoff, conditional-route, rankin-envelope") (priority := "high")
+Each actual exponent skeleton now chooses one more than the integral twelfth
+root of its joint witness cap.  Lean proves that this canonical choice is
+positive and satisfies the Rankin root obligation.  For every prime below
+2^1248 the resulting side-assigned positional profile is therefore valid and
+matches the factorizations of p-1 and p+1.
+
+Erasing the side labels gives exactly the certified skeleton profile, so its
+two-scalar summary dominates the actual profile.  This closes the semantic
+handoff from primes to generated summary rows; only the genuinely exhaustive
+arithmetic cover remains open.
+:::
+:::lemma_ "rankin_width_sensitive_endpoint" (parent := "explicit_strong_approximation") (uses := "rankin_actual_profile_handoff") (lean := "BGS.Markoff.rankinWidthWitnessCap, BGS.Markoff.rankinWidthJointFailureSquare, BGS.Markoff.eight_mul_prime_cast_le_matching_profile_rankinWidthFailureSquare, BGS.Markoff.prime_le_of_matching_rankinNeighborProfile_rankinWidth_leaf") (tags := "proved-in-lean, explicit, width-sensitive, conditional-route, rankin-envelope") (priority := "high")
+The exact-order Rankin inequality is no longer tied to the total number of
+divisors of p-1 and p+1.  If the actual union of maximal candidate orders has
+cardinality at most W, the Corvaja--Zannier witness is bounded directly by
+189 W^3.  The same side-erased Euler product then gives an executable cutoff
+or lower-product leaf.
+
+This is a strict architectural improvement over the all-divisors endpoint:
+a joint-antichain or symmetric-chain certificate can be inserted without
+changing the analytic proof.  This node proves the width-sensitive endpoint;
+it does not yet claim a numerical width certificate or the cutoff 2^1248.
+:::
+:::lemma_ "rankin_joint_antichain_width" (parent := "explicit_strong_approximation") (uses := "rankin_width_sensitive_endpoint") (lean := "BGS.Markoff.nontrivialMiddleGameMaximalOrders_subset_divisors_sq_sub_one, BGS.Markoff.nontrivialMiddleGameMaximalOrders_isAntichain, BGS.Markoff.middleGameMaximalOrders_card_le_nontrivial_add_two, BGS.Markoff.bound_le_rankinJointAntichainWitnessCap, BGS.Markoff.prime_le_of_matching_rankinNeighborProfile_jointAntichainWidth_leaf") (tags := "proved-in-lean, explicit, joint-antichain, width-sensitive, rankin-envelope") (priority := "high")
+The maximal candidate orders from p-1 and p+1 form one divisor family, not
+two independent families.  Every member divides p^2-1.  After removing the
+possible divisors 1 and 2, Lean proves that the union is an antichain: in a
+cross-side divisibility relation the smaller member divides both neighbors
+and hence their difference 2.
+
+Consequently the full maximal-order count is at most the width of this single
+nontrivial antichain plus two.  The new theorem feeds that quantity directly
+into the width-sensitive Rankin endpoint.  The remaining numerical task is
+to certify a sharp width bound for this antichain over the finite 2^1248
+profile domain.
+:::
+:::lemma_ "rankin_joint_antichain_sperner_handoff" (parent := "explicit_strong_approximation") (uses := "rankin_joint_antichain_width") (lean := "BGS.Markoff.nontrivialMiddleGameMaximalOrders_card_le_centralRank_of_encoding, BGS.Markoff.bound_le_rankinCentralRankWitnessCap_of_encoding") (tags := "proved-in-lean, explicit, sperner, central-rank, conditional-route, rankin-envelope") (priority := "high")
+The remaining width estimate has been reduced to one explicit factorization
+encoding.  For any finite ranked poset with a symmetric-chain decomposition,
+an injective encoding of the joint maximal orders which reflects comparison
+back to divisibility sends the joint antichain into an antichain of that
+poset.  Lean then bounds its size by the central rank and inserts that central
+rank, plus the two exceptional divisors, into the Rankin witness cap.
+
+Thus no analytic estimate remains between a divisor-exponent encoding and the
+new cutoff leaf.  Constructing and exhaustively checking the concrete
+2^1248 encoding is still a separate arithmetic certificate obligation.
 :::
 :::lemma_ "explicit_split_hasse_estimate" (parent := "explicit_strong_approximation") (uses := "affine_hasse_weil, conic_rotation_orbits") (lean := "BGS.HasseWeil.bivariateAffineHasseWeilBound_eight, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_of_bivariateAffineHasseWeilBound, BGS.Markoff.weightedSplitTraceWeilBoundAssumption_thirtyThree") (tags := "proved-in-lean, explicit, hasse-weil, split-adapter") (priority := "high")
 The split trace-curve adapter specializes the in-repository affine
@@ -119,7 +294,7 @@ $`100522<p^{1/8}` supply the cage argument.
 :::
 
 :::proof "explicit_numeric_certificates"
-Write $`B=48^3+1`, $`K=2^{458}`, and $`Q=2^{1837}B^{10}`.  The tenth-moment
+Write $`B=48^3+1`, $`K=2^{457}`, and $`Q=2^{1833}B^{10}`.  The tenth-moment
 estimate gives $`T^{10}\le Kp`.  Hence
 $`(48T)^{60}<p^{10}` and $`(68T^2)^{30}<p^{10}`, proving the one-sixth and
 one-third bounds.
@@ -219,7 +394,7 @@ final explicit theorem is attached separately only after Lean instantiates
 all three packages from the certificate and endgame declarations above.
 :::
 
-:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_preliminaryCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity") (priority := "high")
+:::theorem "explicit_punctured_transitivity_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_maximal_bad_orbit_frontier, explicit_numeric_certificates, explicit_large_order_to_cage") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_of_preliminaryCutoff, BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound") (tags := "proved-in-lean, explicit, dependency-complete, modular-transitivity, preliminary-checkpoint") (priority := "high")
 %%%
 source := {
   document := "eddy-fuchs-litman-martin-tripeny"
@@ -239,13 +414,15 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^{1837}(48^3+1)^{10}+1\le p,
+  2^{1833}(48^3+1)^{10}+1\le p,
 `
 
 the action of $`\Gamma` on $`X^*(\mathbb F_p)` is transitive.  The declaration
 `BGS.Markoff.puncturedMarkoffTransitiveAt_of_concretePreliminaryBound` exposes this raw
 natural-number expression in its hypothesis; no unfolding of an opaque
-constant is required by clients.
+constant is required by clients.  This remains a proved preliminary checkpoint;
+the final public cutoff below uses the smaller Euler-seven coarse-support
+composition.
 :::
 
 :::proof "explicit_punctured_transitivity_cutoff"
@@ -257,7 +434,7 @@ through the older existential theorem
 `BGS.Markoff.eventually_strongApproximationAt`.
 :::
 
-:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, explicit_punctured_transitivity_cutoff") (lean := "BGS.Markoff.puncturedMarkoffTransitiveAt_iff_strongApproximationAt, BGS.Markoff.strongApproximationAt_iff_markoffReduction_surjective, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal") (priority := "high")
+:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, certificate_free_coarse_support_cutoff") (lean := "BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportBound, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal, certificate-free") (priority := "high")
 %%%
 source := {
   document := "bgs-published-selected-route"
@@ -278,7 +455,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  2^{1837}(48^3+1)^{10}+1\le p,
+  35721^5\,2^{1547}\,32769^2+1\le p,
 `
 
 coordinatewise reduction is surjective:
@@ -300,22 +477,13 @@ explicit range of primes.
 :::
 
 :::proof "explicit_markoff_reduction_surjective"
-Reduction carries the natural root and origin to their counterparts modulo
-$`p` and intertwines every Vieta move and coordinate swap.  A finite-field word
-from the root to a punctured target therefore lifts to a natural word, while
-the target origin is lifted by the natural origin.  This proves that modular
-transitivity implies reduction surjectivity.
-
-Conversely, lift two punctured finite-field points using reduction
-surjectivity.  Their natural lifts are nonzero, so the natural descent theorem
-connects both to $`(1,1,1)`; reducing those paths connects the original points.
-Lean packages the two directions as
-`BGS.Markoff.puncturedMarkoffTransitiveAt_iff_strongApproximationAt`.
-The separate theorem
-`BGS.Markoff.strongApproximationAt_iff_markoffReduction_surjective` only
-changes between the public triple presentation and the structured internal
-reduction map.  Applying the first equivalence to the explicit transitivity
-theorem gives the stated public endpoint.
+The certificate-free coarse-support theorem first proves surjectivity of the
+structured natural Markoff reduction at the displayed cutoff.  The public
+endpoint then transports this statement across
+`BGS.Markoff.markoffEquivSemiringMarkoffSurface`, which identifies the
+internal Markoff surface with the functor-of-points triple presentation used
+by the Comparator challenge.  No numerical assumption is strengthened during
+this final change of presentation.
 :::
 
 The paper's Corollary 2.5 proves the sharper preliminary threshold
@@ -324,10 +492,10 @@ $`T_d\le\tau(p-1)+\tau(p+1)` and an explicit lower bound for
 $`\varphi(p\pm1)`.  It then improves this further by replacing total divisors
 with maximal divisors and running a finite search over reduced integers.
 
-Those two optimizations are source context, not hidden premises of the Lean
-graph.  The formal endpoint follows the paper's all-divisors
-Corvaja--Zannier/maximal-bad-orbit architecture, but closes its numerical
-obligations with the elementary tenth-moment estimate above.  It therefore
-claims the larger displayed cutoff and makes no claim that either Nicolas'
-analytic estimate or the computer-generated primorial/product certificate has
-been formalized.
+Those paper optimizations are source context, not hidden premises of the Lean
+graph.  The formal endpoint uses the maximal-divisor Euler-seven middle game
+but closes its global count by the weighted all-divisor twentieth moment and
+the exact neighboring-divisor product identity.  It therefore claims the
+displayed $`35721^5 2^{1547}32769^2+1` cutoff and makes no claim that either
+Nicolas' analytic estimate or the computer-generated primorial/product
+certificate has been formalized.
