@@ -16,7 +16,7 @@ def Markoff : CommSemiRingCat ⥤ Type where
     simpa only [Set.mem_setOf_eq, map_add, map_pow, map_mul, map_ofNat] using congrArg f.hom h⟩
 
 theorem Markoff.reduction_surjective_of_explicitBound :
-    let p₀ := 35721 ^ 5 * 2 ^ 1813 + 1
+    let p₀ := 35721 ^ 5 * 2 ^ 1547 * 32769 ^ 2 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by

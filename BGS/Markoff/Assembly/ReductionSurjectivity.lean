@@ -1,5 +1,5 @@
 import BGS.Markoff.Assembly.ExplicitPuncturedTransitivity
-import BGS.Markoff.Assembly.CoarseSupportSurjectivity
+import BGS.Markoff.Assembly.WeightedCoarseSupportSurjectivity
 import BGS.Markoff.Assembly.TransitivitySurjectivity
 
 /-!
@@ -29,17 +29,17 @@ theorem markoffReduction_surjective_of_concretePreliminaryBound
   (puncturedMarkoffTransitiveAt_iff_markoffReduction_surjective p hpPrime).mp
     (puncturedMarkoffTransitiveAt_of_concretePreliminaryBound p hpPrime hp)
 
-/-- The certificate-free Euler-seven coarse-support theorem in the public
+/-- The weighted certificate-free Euler-seven coarse-support theorem in the
 functor presentation used by the Comparator challenge. -/
 theorem reduction_surjective_of_explicitBound :
-    let p₀ := 35721 ^ 5 * 2 ^ 1813 + 1
+    let p₀ := 35721 ^ 5 * 2 ^ 1547 * 32769 ^ 2 + 1
     ∀ (p : ℕ), p.Prime → p₀ ≤ p →
       Function.Surjective
         (BGS.Markoff.map (CommSemiRingCat.ofHom (Nat.castRingHom (ZMod p)))) := by
   dsimp only
   intro p hpPrime hp y
   obtain ⟨x, hx⟩ :=
-    markoffReduction_surjective_of_coarseSupportBound p hpPrime hp
+    markoffReduction_surjective_of_weightedCoarseSupportBound p hpPrime hp
     (markoffEquivSemiringMarkoffSurface (ZMod p) y)
   refine ⟨(markoffEquivSemiringMarkoffSurface ℕ).symm x, ?_⟩
   apply (markoffEquivSemiringMarkoffSurface (ZMod p)).injective

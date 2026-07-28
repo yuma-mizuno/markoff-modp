@@ -41,29 +41,32 @@ above $`10^{532}`, then replaces the total-divisor count by maximal divisors
 and reports an optimized primorial/product cutoff.
 
 The formal arithmetic input replaces the paper's Nicolas and Euler-totient
-estimates by a fully elementary tenth-moment divisor bound.  Lean proves
+estimates with fully elementary prime-penalty moments.  Lean first proves
 
 $$`
   \tau(n)^{10}\le 2^{447}n,
-  \qquad K_{10}=2^{457}.
+  \qquad \tau(n)^{20}\le 2^{796}n^2.
 `
 
-The prime-factor penalties sum exactly to $`447`.  The direct preliminary
-all-divisors assembly gives the proved checkpoint
-$`2^{1833}(48^3+1)^{10}+1`.  The final route then uses the formalized
-Euler-seven maximal-divisor complement argument.  Bounding its joint maximal
-divisor count by the same simultaneous all-divisor count closes the last cubic
-obstruction without a divisor table and gives
+The tenth-moment bound gives the direct preliminary all-divisors checkpoint
+$`2^{1833}(48^3+1)^{10}+1`.  The weighted twentieth moment is strictly
+stronger than simply squaring that estimate: keeping the fractional rounding
+across prime bands lowers the aggregate exponent from $`894` to $`796`.
+Combining it with the exact gcd-two identity for the neighboring orders and
+the formalized Euler-seven maximal-divisor complement argument closes the last
+cubic obstruction without a divisor table and gives
 
 $$`
-  p_0=35721^5\,2^{1813}+1
-     \approx 3.4040833120411547\times10^{568}.
+  p_0=35721^5\,2^{1547}\,32769^2+1
+     \approx 3.0828167547327980\times10^{497}.
 `
 
-This is smaller than the direct preliminary formal cutoff by approximately
-$`4.9347\times10^{33}`.  No Nicolas inequality, explicit lower bound for
-$`\varphi`, finite maximal-divisor enumeration, or Algorithm 1 certificate is
-imported into this endpoint.
+This is smaller than the preceding formal endpoint by a factor of
+approximately $`1.1042\times10^{71}`.  It is also approximately
+$`3.24\times10^{34}` times below the paper's non-certificate threshold
+$`10^{532}`.  No Nicolas inequality, explicit lower bound for $`\varphi`,
+finite maximal-divisor enumeration, or Algorithm 1 certificate is imported
+into this endpoint.
 :::lemma_ "explicit_elementary_divisor_bound" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.preliminaryPrimePenalty, BGS.NumberTheory.card_divisors_pow_ten_le_preliminary_constant_mul, BGS.Markoff.preliminaryDivisorMomentConstant, BGS.Markoff.preliminaryDivisorMomentConstant_eq, BGS.Markoff.preliminary_divisor_sum_pow_ten_le") (tags := "proved-in-lean, explicit, arithmetic, paper-preliminary-route") (priority := "high")
 %%%
 source := {
@@ -100,6 +103,31 @@ proves the displayed estimate.  Finally,
 $`(x+y)^{10}\le2^9(x^{10}+y^{10})` and
 $`(p-1)+(p+1)=2p` give $`T^{10}\le2^{457}p`.
 :::
+
+:::lemma_ "weighted_joint_neighbor_divisor_moment" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.weightedPrimePenaltyTwenty, BGS.NumberTheory.card_divisors_pow_twenty_le_weighted_constant_mul_sq, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_of_odd, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_pow_twenty_le, BGS.NumberTheory.card_divisors_pred_mul_card_divisors_succ_pow_ten_weighted_le, BGS.NumberTheory.neighboringDivisorSumWeightedMomentConstant, BGS.NumberTheory.neighboringDivisorSumWeightedMomentConstant_eq, BGS.NumberTheory.card_divisors_pred_add_card_divisors_succ_pow_twenty_le") (tags := "proved-in-lean, explicit, arithmetic, certificate-free, formal-refinement") (priority := "high")
+The formal route strengthens the preceding estimate by charging the doubled
+number weight before rounding each prime penalty, rather than squaring the
+already-rounded tenth-moment bound.  Lean proves
+
+$$`
+  \tau(n)^{20}\le2^{796}n^2.
+`
+
+The doubled penalties over the prime bands sum to $`796`, instead of
+$`2\cdot447=894`.  For odd $`p`, Lean also proves the exact identity
+
+$$`
+  \tau(p-1)\tau(p+1)=2\tau((p^2-1)/2)
+`
+
+and uses it to control the product of the two neighboring divisor counts.
+Writing $`T=\tau(p-1)+\tau(p+1)`, a balanced/dominant split then gives
+
+$$`
+  T^{20}\le Dp^2,
+  \qquad D=2^{796}+2^{781}=2^{781}\cdot32769.
+`
+:::
 :::theorem "euler_seven_coarse_support_frontier" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound, corvaja_zannier_existing_markoff_adapter, chen_orbit_divisibility_via_martin") (lean := "BGS.Markoff.maximalDivisorCountSum, BGS.NumberTheory.eight_mul_le_35721_mul_fourth_of_count_degree_squareEnvelope, BGS.Markoff.puncturedMarkoffTransitiveAt_of_nonparabolicComplement_eulerSevenPairedMaximalDivisor_frontier, BGS.Markoff.puncturedMarkoffTransitiveAt_of_eulerSevenSquareEnvelope_coarseSupport, BGS.Markoff.markoffReduction_surjective_of_eulerSevenSquareEnvelope_coarseSupport") (tags := "proved-in-lean, explicit, maximal-divisors, euler-seven, dependency-frontier") (priority := "high")
 %%%
 source := {
@@ -132,23 +160,24 @@ that a particular envelope satisfies the global strict inequality; that final
 arithmetic implication is attached in the next node.
 :::
 
-:::theorem "certificate_free_coarse_support_cutoff" (parent := "explicit_strong_approximation") (uses := "explicit_elementary_divisor_bound, euler_seven_coarse_support_frontier") (lean := "BGS.Markoff.coarseSupportStrongApproximationOpenCutoff, BGS.Markoff.coarseSupportStrongApproximationCutoff, BGS.Markoff.preliminary_35721_mul_divisorSum_pow_eight_lt, BGS.Markoff.maximalDivisorCountSum_sq_le_divisorSum_sq, BGS.Markoff.twoPow756_lt_of_coarseSupportOpenCutoff_lt, BGS.Markoff.markoffReduction_surjective_of_coarseSupportOpenCutoff, BGS.Markoff.markoffReduction_surjective_of_coarseSupportBound") (tags := "proved-in-lean, explicit, dependency-complete, certificate-free, numerical-cutoff") (priority := "high")
+:::theorem "certificate_free_coarse_support_cutoff" (parent := "explicit_strong_approximation") (uses := "weighted_joint_neighbor_divisor_moment, euler_seven_coarse_support_frontier") (lean := "BGS.Markoff.weightedCoarseSupportStrongApproximationOpenCutoff, BGS.Markoff.weightedCoarseSupportStrongApproximationCutoff, BGS.Markoff.weighted_35721_mul_divisorSum_pow_eight_lt, BGS.Markoff.maximalDivisorCountSum_sq_le_divisorSum_sq, BGS.Markoff.twoPow756_lt_of_weightedCoarseSupportOpenCutoff_lt, BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportOpenCutoff, BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportBound") (tags := "proved-in-lean, explicit, dependency-complete, certificate-free, numerical-cutoff") (priority := "high")
 Set $`T=\tau(p-1)+\tau(p+1)` and use the constant square envelope
 $`S(d)=T^2`.  Every maximal-divisor count is at most the corresponding total
-divisor count, so this envelope is valid for all $`d`.  If the Euler-seven
-obstruction failed, then
+divisor count, so this envelope is valid for all $`d`.  Put
+$`D=2^{796}+2^{781}=2^{781}\cdot32769`.  The weighted neighboring-divisor
+moment gives $`T^{20}\le Dp^2`.  If the Euler-seven obstruction failed, then
 
 $$`
   (8p)^5\le 35721^5T^{40}
-       \le 35721^5(2^{457}p)^4.
+       \le 35721^5(Dp^2)^2.
 `
 
-Canceling $`2^{15}p^4` gives
-$`p\le35721^5 2^{1813}`.  Hence the strict obstruction inequality holds for
-every $`p>35721^5 2^{1813}`.  This cutoff also dominates $`2^{756}`, so the
+Canceling $`2^{15}p^4` and expanding $`D^2` gives
+$`p\le35721^5 2^{1547}32769^2`.  Hence the strict obstruction inequality
+holds above this open cutoff.  The cutoff also dominates $`2^{756}`, so the
 coarse-support frontier applies and yields reduction surjectivity.  The proof
-uses only kernel-checked symbolic arithmetic and the elementary divisor
-moment; there is no factorization list or large finite certificate.
+uses kernel-checked symbolic arithmetic and a fixed small-prime band check; it
+has no cutoff-sized factorization list or divisor-profile certificate.
 :::
 
 :::lemma_ "rankin_1248_finite_domain" (parent := "explicit_strong_approximation") (lean := "BGS.NumberTheory.rankinCutoff1248CapTable_check, BGS.NumberTheory.rankinCutoff1248CapTable_product, BGS.NumberTheory.jointOddPrimeList_length_lt_275_of_lt_two_pow_1248, BGS.NumberTheory.actualRankinExponentSkeleton_admissible_1248") (tags := "proved-in-lean, explicit, finite-domain, conditional-route, rankin-envelope") (priority := "high")
@@ -405,7 +434,7 @@ through the older existential theorem
 `BGS.Markoff.eventually_strongApproximationAt`.
 :::
 
-:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, certificate_free_coarse_support_cutoff") (lean := "BGS.Markoff.markoffReduction_surjective_of_coarseSupportBound, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal, certificate-free") (priority := "high")
+:::theorem "explicit_markoff_reduction_surjective" (parent := "explicit_strong_approximation") (uses := "strong_approximation_goal, natural_markoff_connectivity, certificate_free_coarse_support_cutoff") (lean := "BGS.Markoff.markoffReduction_surjective_of_weightedCoarseSupportBound, BGS.Markoff.markoffEquivSemiringMarkoffSurface, BGS.Markoff.reduction_surjective_of_explicitBound") (tags := "proved-in-lean, explicit, dependency-complete, reduction-surjectivity, main-result, final-goal, certificate-free") (priority := "high")
 %%%
 source := {
   document := "bgs-published-selected-route"
@@ -426,7 +455,7 @@ source := {
 For every prime $`p` satisfying
 
 $$`
-  35721^5\,2^{1813}+1\le p,
+  35721^5\,2^{1547}\,32769^2+1\le p,
 `
 
 coordinatewise reduction is surjective:
@@ -465,7 +494,8 @@ with maximal divisors and running a finite search over reduced integers.
 
 Those paper optimizations are source context, not hidden premises of the Lean
 graph.  The formal endpoint uses the maximal-divisor Euler-seven middle game
-but closes its global count by the elementary all-divisor tenth moment.  It
-therefore claims the displayed $`35721^5 2^{1813}+1` cutoff and makes no claim
-that either Nicolas' analytic estimate or the computer-generated
-primorial/product certificate has been formalized.
+but closes its global count by the weighted all-divisor twentieth moment and
+the exact neighboring-divisor product identity.  It therefore claims the
+displayed $`35721^5 2^{1547}32769^2+1` cutoff and makes no claim that either
+Nicolas' analytic estimate or the computer-generated primorial/product
+certificate has been formalized.
