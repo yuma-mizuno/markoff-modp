@@ -8,6 +8,10 @@ _out/
 /Book/
 /Papers/
 
+# Python bytecode.
+__pycache__/
+*.py[cod]
+
 # Reproducible LaTeX build intermediates; keep source and rendered PDFs.
 *.aux
 *.fdb_latexmk

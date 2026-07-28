@@ -1,5 +1,5 @@
 import BGS.Combinatorics.SymmetricChainProduct
-import BGS.NumberTheory.JointMaximalDivisorFactorizationCertificate
+import BGS.NumberTheory.PrimePowerFactorization
 
 /-!
 # Sperner bounds for divisor exponent boxes

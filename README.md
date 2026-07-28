@@ -81,10 +81,6 @@ leading constant $2^{796}$.  No divisor table, factorization list, or large
 finite certificate is used.  This improves the preceding formal cutoff by a
 factor of approximately $1.1042\times 10^{71}$.
 
-The paper's preliminary non-certificate threshold $p>10^{532}$ uses Nicolas'
-explicit divisor bound and an explicit Euler-totient estimate.  The new formal
-cutoff is approximately $3.24\times10^{34}$ times smaller.
-
 ## Improving the cutoff
 
 The cutoff displayed above is far from optimal. A smaller bound was proved by
