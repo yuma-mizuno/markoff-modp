@@ -16,6 +16,22 @@ project:
 repository:
   role: "substantive-development"
 
+related_projects:
+  - name: "riemann-roch-function-fields"
+    authors:
+      - "Guanghao Li"
+    repository: "https://github.com/vaca22/riemann-roch-function-fields"
+    revision: "dbca5beed1da77e2ecd1eec207d0451fa57e8aa6"
+    relationship: "vendored-proof-library"
+    note: >-
+      The `RiemannRoch/` directory vendors the transitive Lean source dependencies of Guanghao
+      Li's coordinate-free Riemann-Roch development at the immutable revision above, with a small
+      mechanical compatibility port from Lean/Mathlib v4.31.0 to this repository's v4.32.0-rc1
+      toolchain. It is a checked proof library, not a literature assumption: the BGS Hasse-Weil
+      development imports `RiemannRoch.CoordinateFree.RiemannRoch` and transports that theorem to
+      its exhaustive finite-extension place model. The independent elliptic-curve application from
+      the upstream repository is not vendored.
+
 classification:
   arxiv:
     - "math.NT"
@@ -139,7 +155,8 @@ status:
     from natural Markoff solutions to solutions modulo p is surjective for every prime p at least
     35721^5 * 2^1547 * 32769^2 + 1. The explicit cutoff is obtained by the repository's
     certificate-free weighted Euler-seven coarse-support argument and is not the optimized cutoff
-    of Eddy-Fuchs-Litman-Martin-Tripeny.
+    of Eddy-Fuchs-Litman-Martin-Tripeny. The Hasse-Weil infrastructure also uses the vendored and
+    locally compatibility-ported Riemann-Roch proof library documented under `related_projects`.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -280,6 +297,6 @@ alignment:
         Martin's later Penner-weight proof rather than Chen's original moduli-space proof.
 
 acknowledgements: >-
-  Built on Lean 4, mathlib, Verso Blueprint, and leanprover/comparator. The project relies on the
-  cited authors' mathematical work; theorem and page citations in the Blueprint identify the
-  corresponding literature precisely.
+  Built on Lean 4, mathlib, Verso Blueprint, leanprover/comparator, and Guanghao Li's vendored
+  Riemann-Roch formalization. The project relies on the cited authors' mathematical work; theorem
+  and page citations in the Blueprint identify the corresponding literature precisely.
