@@ -2,9 +2,23 @@ version: "v0.3"
 
 project:
   name: "Markoff mod p"
+  description: >-
+    Lean 4 formalization of strong approximation for the Markoff surface modulo sufficiently large 
+    primes. The primary source is Bourgain-Gamburd-Sarnak (2026).
   authors:
     - "Yuma Mizuno"
+  responsible_maintainers:
+    - "Yuma Mizuno"
   license: "Apache-2.0"
+
+repository:
+  role: "substantive-development"
+
+classification:
+  arxiv:
+    - "math.NT"
+  msc2020:
+    - "11D25"
 
 sources:
   - title: "Strong Approximation and Diophantine Properties of Markoff Triples"
@@ -118,7 +132,7 @@ automation:
 
     - method: "agent"
       models:
-        - "OpenAI Codex (GPT-5 family)"
+        - "GPT-5.6-Sol"
       framework: "Codex"
       tool_setup: "Lean diagnostics, Lake builds, repository search, source reconstruction, and Comparator CI."
       cost:
