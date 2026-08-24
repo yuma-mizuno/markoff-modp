@@ -1,8 +1,0 @@
-import BGS.HasseWeil.FunctionFieldNormalClosure
-
-#print axioms BGS.HasseWeil.functionFieldSeparableClosureEmbedding
-#print axioms BGS.HasseWeil.FunctionFieldNormalClosure
-#print axioms BGS.HasseWeil.functionFieldToNormalClosure
-#print axioms BGS.HasseWeil.functionFieldToNormalClosure_injective
-#print axioms BGS.HasseWeil.functionFieldNormalClosure_finiteDimensional
-#print axioms BGS.HasseWeil.functionFieldNormalClosure_isGalois
