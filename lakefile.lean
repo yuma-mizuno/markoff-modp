@@ -2,13 +2,8 @@ import Lake
 
 open Lake DSL
 
--- Match the official current Verso Blueprint template and Lean toolchain.
-require VersoBlueprint from git
-  "https://github.com/leanprover/verso-blueprint"@"v4.32.0"
-
--- Follow current mathlib. Keep this direct requirement last so mathlib's
--- transitive dependency revisions take precedence. The checked-in manifest
--- makes the exact resolved revision reproducible.
+-- Follow current mathlib. The checked-in manifest makes the exact resolved
+-- revision reproducible.
 require "leanprover-community" / "mathlib"
 
 package BGS where
@@ -26,9 +21,3 @@ lean_lib BGS where
 -- solution modules available to the independent CI audit.
 lean_lib BGSComparator where
   globs := #[`Comparator.+]
-
-lean_lib BGSBlueprint where
-  roots := #[`BGS.Blueprint]
-
-lean_exe «blueprint-gen» where
-  root := `BGSBlueprintMain

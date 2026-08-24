@@ -5,7 +5,7 @@ import BGS.Markoff.Core.TraceClassification
 
 This module gives the exact finite solution set for equation (41) and proves the elementary
 quadratic-fiber bound used when one subgroup is small.  The genuinely deep uniform power-saving
-estimate remains a separate Blueprint input.
+estimate is supplied by the separate Corvaja--Zannier development.
 -/
 
 namespace BGS.Markoff

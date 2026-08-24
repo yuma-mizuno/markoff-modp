@@ -6,8 +6,8 @@
   the published PDF rather than author-supplied source.
 - Retain `Papers/arXiv-1607.01530v1/PAPER1W.tex` only for historical comparison
   and for diagnosing changes made before publication.
-- Preserve exact published-page and reconstructed-source-line provenance for
-  Blueprint claims.
+- Preserve exact published-page and reconstructed-source-line provenance in
+  declaration documentation and formalization metadata.
 - Keep original Markoff coordinates and normalized trace coordinates
   type-distinct in names and statements.
 - Define rotation order with `orderOf`; never copy the paper's quotient by an
@@ -18,9 +18,7 @@
   projective Szemeredi--Trotter and Stepanov routes optional until repaired.
 - If a named argument seems necessary, reconsider explicit and implicit
   parameters at the definition site first.
-- Update the Blueprint in the same change as the corresponding Lean proof
-  path. Map each stage node to its exact Lean boundary, and keep a conditional
-  cross-stage composition separate from a completed stage theorem.
-- Validate formal code with `lake build BGS BGSBlueprint`, then render and check the
-  Blueprint with `scripts/build-blueprint.ps1` on Windows or
-  `scripts/ci-pages.sh` on Unix.
+- Keep `formalization.yaml` aligned with the corresponding Lean proof path,
+  proof status, scope, and known limitations.
+- Validate formal code with `lake build BGS` and keep the Comparator challenge,
+  solution, and configuration aligned with the public endpoint.

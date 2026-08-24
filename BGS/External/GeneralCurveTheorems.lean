@@ -121,7 +121,7 @@ def planeTorusEulerCharacteristicBound
 bivariate torus curve rather than for the weighted Markoff trace family.  The
 in-repository proof is `BGS.CorvajaZannier.generalCorvajaZannierPlaneCurveTheorem`;
 the source proof and its formal dependency path are tracked in the dedicated
-Blueprint chapter. -/
+project metadata. -/
 def GeneralCorvajaZannierPlaneCurveTheorem : Prop :=
   ∀ (p : ℕ) [Fact p.Prime]
     (K : Type) [Field K] [Fintype K] [DecidableEq K] [CharP K p]

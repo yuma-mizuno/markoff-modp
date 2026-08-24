@@ -16,7 +16,7 @@ inductive WeightedSplitTraceProjectiveChart where
   | invertBoth
   deriving DecidableEq
 
-/-- Backwards-compatible name used by earlier Blueprint snapshots. -/
+/-- Backwards-compatible name used by earlier documentation snapshots. -/
 abbrev WeightedSplitTraceNormalizationChart := WeightedSplitTraceProjectiveChart
 
 universe u

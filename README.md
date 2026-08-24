@@ -13,10 +13,6 @@ the BGS results yield strong approximation for all sufficiently large primes.
 
 Most of the formalization was carried out by GPT-5.6-Sol.
 
-## Blueprint
-
-**[Strong Approximation for the Markoff surface](https://yuma-mizuno.github.io/markoff-modp/)**
-
 ## Formalized Result
 
 For a commutative semiring $R$, define the Markoff surface by
@@ -104,46 +100,17 @@ cutoff if it is proved in Lean and passes the `Comparator` challenge.
 - Lean: `leanprover/lean4:v4.32.0-rc1`
 - mathlib: current `master`, locked to an exact revision by
   `lake-manifest.json`
-- verso-blueprint: the compatible `v4.32.0` branch, also locked by the
-  manifest
 
 ## Build
 
-On PowerShell:
+Run the following on any supported platform:
 
-```powershell
-lake update
+```console
 lake exe cache get
-./scripts/build-blueprint.ps1
+lake build BGS
 ```
 
-On Git Bash, WSL, Linux, or macOS:
-
-```bash
-lake update
-lake exe cache get
-./scripts/ci-pages.sh
-```
-
-The rendered site is written to:
-
-```text
-_out/site/html-multi/index.html
-```
-
-Useful Blueprint commands:
-
-```powershell
-lake exe vbp discover
-lake exe vbp build
-lake exe vbp check
-lake exe vbp build --serve
-```
-
-HTML generation needs no Node, Python blueprint package, or TeX installation.
-PDF output is optional and requires a LuaLaTeX-compatible executable.
-The PowerShell script also contains a temporary workaround for a
-`v4.32.0-rc1` Windows path-separator bug in Verso's embedded search assets.
+The committed `lake-manifest.json` pins every dependency revision.
 
 ## Continuous verification
 
@@ -181,10 +148,8 @@ BGS/Markoff/*.lean              folder-level import aggregators
 BGS/NumberTheory/DivisorBound.lean  proved subpolynomial divisor estimate
 BGS/CorvajaZannier/             numerical implications and corrected optimization
 BGS/Markoff/Core/Statements.lean  exact logical statements of Theorems 1 and 2
-BGS/Blueprint.lean              Blueprint top level
-BGS/Blueprint/Chapters/         proof route and literature citations
-BGSBlueprintMain.lean           HTML generator
+Comparator/Challenge.lean       small auditable statement surface
+Comparator/Solution.lean        proof connected to the production endpoint
+Comparator/config.json          Comparator declaration mapping
 formalization.yaml              public source and theorem alignment metadata
-scripts/build-blueprint.ps1     Windows build-and-render gate
-scripts/ci-pages.sh             Unix and CI build-and-render gate
 ```

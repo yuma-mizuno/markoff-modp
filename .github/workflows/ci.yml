@@ -1,4 +1,4 @@
-name: BGS CI and Blueprint Pages
+name: BGS CI
 
 on:
   pull_request:
@@ -11,8 +11,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: ${{ github.repository }}-bgs-ci-${{ github.ref }}
@@ -20,7 +18,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Build, render, and verify
+    name: Build and verify
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
@@ -30,12 +28,6 @@ jobs:
     steps:
       - name: Check out BGS
         uses: actions/checkout@v6
-
-      # One-time repository setup is still required:
-      # Settings > Pages > Build and deployment > Source: GitHub Actions.
-      - name: Configure Pages
-        if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v6
 
       # For this complex workflow, manage the Lake cache explicitly. The key
       # follows lean-action's standard scheme: platform + resolved dependency
@@ -59,7 +51,7 @@ jobs:
           use-mathlib-cache: true
 
       - name: Build Lean project once
-        run: lake build BGS BGSBlueprint
+        run: lake build BGS
 
       # Save before the long-running consumers so a later Comparator failure
       # does not discard a successful compilation. Fork PRs may restore but
@@ -70,9 +62,6 @@ jobs:
         with:
           path: .lake/build
           key: ${{ steps.lake-cache.outputs.cache-primary-key }}
-
-      - name: Render Blueprint
-        run: bash scripts/ci-pages.sh --skip-build
 
       - name: Restore verifier binaries
         id: verifier-cache
@@ -149,25 +138,3 @@ jobs:
             -E COMPARATOR_LEAN4EXPORT="$HOME/verifier-bin/lean4export" \
             --working-directory "$GITHUB_WORKSPACE" \
             -- bash -c 'lake env comparator Comparator/config.json'
-
-      - name: Upload Pages artifact
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: _out/site/html-multi
-
-  deploy:
-    name: Deploy Blueprint site
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: verify
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
