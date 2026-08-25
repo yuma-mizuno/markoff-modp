@@ -151,9 +151,10 @@ status:
     Markoff functor on commutative semirings, natural-number connectivity, the selected BGS route
     to finite-field transitivity, Corvaja-Zannier middle-game input, affine Hasse-Weil input,
     Chen's component-divisibility theorem via Martin's proof, and both eventual and explicit
-    strong approximation. The public Comparator endpoint proves that coordinatewise reduction
-    from natural Markoff solutions to solutions modulo p is surjective for every prime p at least
-    35721^5 * 2^1547 * 32769^2 + 1. The explicit cutoff is obtained by the repository's
+    strong approximation. The public Comparator endpoint proves that there is a threshold above
+    which coordinatewise reduction from natural Markoff solutions to solutions modulo p is
+    surjective for every prime p. `Solution.lean` supplies
+    35721^5 * 2^1547 * 32769^2 + 1 as an explicit witness. This cutoff is obtained by the repository's
     certificate-free weighted Euler-seven coarse-support argument and is not the optimized cutoff
     of Eddy-Fuchs-Litman-Martin-Tripeny. The Hasse-Weil infrastructure also uses the vendored and
     locally compatibility-ported Riemann-Roch proof library documented under `related_projects`.
@@ -171,7 +172,7 @@ status:
         - "propext"
         - "Quot.sound"
         - "Classical.choice"
-      comparator_config: "Comparator/config.json"
+      comparator_config: "comparator.json"
       literature_dependencies: []
 
 automation:

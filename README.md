@@ -38,7 +38,7 @@ p_0 = 35721^5\,2^{1547}\,32769^2+1.
 
 is surjective.
 
-The statement is formalized as
+The corresponding eventual-surjectivity theorem is formalized as follows:
 ```lean4
 import Mathlib
 
@@ -54,14 +54,14 @@ abbrev markoffNatToModp (p : ℕ) : MarkoffNat → MarkoffModp p :=
   fun ⟨⟨x, y, z⟩, h⟩ ↦ ⟨⟨x, y, z⟩, by simpa using congrArg (fun n : ℕ ↦ (n : ZMod p)) h⟩
 
 theorem markoff_reduction_surjective_of_large_prime :
-    let p₀ := 35721 ^ 5 * 2 ^ 1547 * 32769 ^ 2 + 1
-    ∀ (p : ℕ), p.Prime → p₀ ≤ p → Function.Surjective (markoffNatToModp p) := by
+    ∃ p₀ : ℕ, ∀ (p : ℕ), p.Prime → p₀ ≤ p →
+      Function.Surjective (markoffNatToModp p) := by
   sorry
 
 end Challenge
 ```
-and its proof is given as
-[`Comparator/Solution.lean`](Comparator/Solution.lean).
+[`Solution.lean`](Solution.lean) proves this statement by choosing the explicit
+value of $p_0$ displayed above and applying the proved production endpoint.
 
 The displayed cutoff is a 498-digit integer, approximately
 $3.0828167547327980\times 10^{497}$.  It combines the formalized Euler-seven
@@ -114,19 +114,19 @@ The committed `lake-manifest.json` pins every dependency revision.
 
 ## Continuous verification
 
-The `Comparator` workflow independently checks the exact statement and axiom
-boundary of one public endpoint:
+The `Comparator` workflow independently checks the statement and axiom boundary
+of `Challenge.markoff_reduction_surjective_of_large_prime`. Its solution is
+backed by the sorry-free production endpoint
+`BGS.Markoff.reduction_surjective_of_explicitBound`.
 
-- `BGS.Markoff.reduction_surjective_of_explicitBound`.
-
-`Comparator/Challenge.lean` is one self-contained trusted specification file.
-It imports only `Mathlib`, defines the functor `BGS.Markoff`, and states its
-explicit reduction-surjectivity theorem with the single intentional `sorry`
-placeholder required by Comparator. It does not import
+`Challenge.lean` is one self-contained trusted specification file. It imports
+only `Mathlib`, defines the natural and modular Markoff surfaces and their
+coordinatewise reduction map, and states eventual reduction surjectivity with
+the single intentional `sorry` placeholder required by Comparator. It does not import
 the production `BGS` library. The challenge is isolated in the non-default
 `BGSComparator` library; the production `BGS` and `RiemannRoch` libraries have
-sorry count zero, and `Comparator/Solution.lean` imports the proved production
-endpoint.
+sorry count zero, and `Solution.lean` imports the proved production endpoint
+and supplies the explicit cutoff as its existential witness.
 The workflow pins Comparator and lean4export revisions compatible with the
 repository's Lean toolchain.
 
@@ -148,8 +148,8 @@ BGS/Markoff/*.lean              folder-level import aggregators
 BGS/NumberTheory/DivisorBound.lean  proved subpolynomial divisor estimate
 BGS/CorvajaZannier/             numerical implications and corrected optimization
 BGS/Markoff/Core/Statements.lean  exact logical statements of Theorems 1 and 2
-Comparator/Challenge.lean       small auditable statement surface
-Comparator/Solution.lean        proof connected to the production endpoint
-Comparator/config.json          Comparator declaration mapping
+Challenge.lean                  small auditable existence statement
+Solution.lean                   explicit witness and production proof
+comparator.json                 Comparator declaration mapping
 formalization.yaml              public source and theorem alignment metadata
 ```

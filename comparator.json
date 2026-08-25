@@ -1,6 +1,6 @@
 {
-  "challenge_module": "Comparator.Challenge",
-  "solution_module": "Comparator.Solution",
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
   "theorem_names": [
     "Challenge.markoff_reduction_surjective_of_large_prime"
   ],

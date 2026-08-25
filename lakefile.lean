@@ -17,7 +17,7 @@ lean_lib RiemannRoch where
 lean_lib BGS where
 
 -- The Comparator specification intentionally contains one proof placeholder.
--- Keep it outside the production library while still making the challenge and
--- solution modules available to the independent CI audit.
+-- Keep them outside the production library while still making the challenge
+-- and solution modules available to the independent CI audit.
 lean_lib BGSComparator where
-  globs := #[`Comparator.+]
+  roots := #[`Challenge, `Solution]

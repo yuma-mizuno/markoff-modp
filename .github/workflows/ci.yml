@@ -137,4 +137,4 @@ jobs:
             -E COMPARATOR_LANDRUN="$HOME/verifier-bin/landrun" \
             -E COMPARATOR_LEAN4EXPORT="$HOME/verifier-bin/lean4export" \
             --working-directory "$GITHUB_WORKSPACE" \
-            -- bash -c 'lake env comparator Comparator/config.json'
+            -- bash -c 'lake env comparator comparator.json'
