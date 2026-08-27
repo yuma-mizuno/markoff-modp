@@ -54,7 +54,13 @@ sources:
       route, including natural Markoff connectivity, the orbit-growth and giant-orbit conclusions
       of Theorem 1, the middle-game and endgame mechanisms, and the exceptional-prime conclusion
       of Theorem 2. Eventual strong approximation additionally uses Chen's component-divisibility
-      theorem, and the explicit cutoff is obtained by a separate formal argument.
+      theorem, and the explicit cutoff is obtained by a separate formal argument. In the published
+      PDF, Conjecture 1 on page 2 states surjectivity of reduction from the nonzero integral Markoff
+      points onto the nonzero surface modulo p. Section 1.3 on page 4 records Chen's orbit-cardinality
+      divisibility result and states that combining it with BGS Theorem 1 establishes Conjecture 1
+      for all sufficiently large p. The BGS preprint appeared as arXiv:1607.01530v1 in 2016; the
+      revised article was published online on 29 August 2025 and appeared in JAMS 39 (2026), no. 1,
+      pages 177--204, after Chen's arXiv and journal publications.
 
   - title: "Greatest common divisors of u - 1, v - 1 in positive characteristic and rational points on curves over finite fields"
     authors:
@@ -108,10 +114,17 @@ sources:
     license: "Publisher copyright"
     author_endorsement: "not-contacted"
     note: >-
-      Original source of the Markoff component-cardinality divisibility theorem and the resulting
-      strong-approximation theorem for all sufficiently large primes. The repository proves the
-      same divisibility conclusion but does not formalize Chen's moduli-space proof; its Lean
-      proof instead follows Martin's later elementary Markoff-graph argument.
+      Exact source of the public challenge. On page 81, Definition 5.5.6 defines strong
+      approximation mod n as surjectivity of the natural map V(Z) -> V(Z/nZ), and Theorem 5.5.7(c)
+      states that the Markoff surface satisfies it for all but finitely many primes; the proof is on
+      page 82. The bibliography on page 93 cites BGS only in its then-available 2016 preprint form,
+      arXiv:1607.01530. Chen's v2 appeared in 2021 and the article was published in Annals of
+      Mathematics 199 (2024), no. 1, pages 301--443 (DOI 10.4007/annals.2024.199.1.5), before the
+      revised BGS article was published online in 2025. This chronology explains why the exact
+      eventual-surjectivity result is stated in Chen, while the later BGS publication incorporates
+      Chen's result in its Section 1.3. The
+      repository proves the same divisibility conclusion but follows Martin's later elementary
+      Markoff-graph argument rather than Chen's moduli-space proof.
 
   - title: "A new proof of Chen's theorem for Markoff graphs"
     authors:
@@ -233,7 +246,7 @@ alignment:
       status: "proved"
       note: "The natural Markoff surface is the origin together with one component rooted at (1,1,1), proved by well-founded Vieta descent."
 
-    - source: "BGS Strong Approximation Conjecture, source-faithful reduction statement"
+    - source: "Chen, arXiv:2011.12940v2, p. 81, Definition 5.5.6 and Theorem 5.5.7(c); proof p. 82"
       lean: "BGS.Markoff.reduction_surjective_of_explicitBound"
       module: "BGS.Markoff.Assembly.ReductionSurjectivity"
       status: "proved"
@@ -241,7 +254,10 @@ alignment:
         The coordinatewise map from natural Markoff solutions to Markoff solutions modulo p is
         surjective for primes at least 35721^5 * 2^1547 * 32769^2 + 1. The formal bridge proves
         reduction surjectivity equivalent to finite-field transitivity, with natural connectivity
-        used in the reverse direction.
+        used in the reverse direction. The later BGS publication states the corresponding Strong
+        Approximation Conjecture on PDF page 2 and explains on PDF page 4, Section 1.3, that Chen's
+        orbit-cardinality divisibility theorem combined with BGS Theorem 1 proves it for all
+        sufficiently large primes.
 
     - source: "Bourgain-Gamburd-Sarnak, Theorem 1"
       lean: "BGS.Markoff.theoremOneStatement"
@@ -249,7 +265,7 @@ alignment:
       status: "proved"
       note: "Both the logarithmic orbit lower bound and the giant-orbit conclusion are unconditional."
 
-    - source: "BGS Conjecture 1 for all sufficiently large primes"
+    - source: "BGS published PDF p. 4, Section 1.3, using Chen; Chen, arXiv:2011.12940v2, p. 81, Theorem 5.5.7(c)"
       lean: "BGS.Markoff.eventually_strongApproximationAt"
       module: "BGS.Markoff.Assembly.Unconditional"
       status: "proved"

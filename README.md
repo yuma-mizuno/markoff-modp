@@ -6,7 +6,7 @@ Jean Bourgain, Alexander Gamburd, and Peter Sarnak (BGS) on the Markoff surface
 in
 [*Strong Approximation and Diophantine Properties of Markoff
 Triples*](https://doi.org/10.1090/jams/1061).  Combined with
-[William Chen's component-divisibility theorem](https://arxiv.org/abs/2011.12940),
+[William Chen's component-divisibility theorem](https://arxiv.org/abs/2011.12940v2),
 which is formalized here using
 [Daniel E. Martin's later elementary proof](https://arxiv.org/abs/2502.15960),
 the BGS results yield strong approximation for all sufficiently large primes.
