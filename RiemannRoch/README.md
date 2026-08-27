@@ -13,7 +13,7 @@ its source in this repository.
 ## Local compatibility port
 
 Upstream targets Lean/Mathlib `v4.31.0`.  BGS currently uses Lean
-`v4.32.0-rc1` and its matching Mathlib revision.  The source was verified
+`v4.32.0` and its matching Mathlib revision.  The source was verified
 against a fresh checkout of the commit above, then the following five modules
 received mechanical migrations to Mathlib's current explicit
 ramification/inertia-degree API:

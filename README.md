@@ -97,9 +97,9 @@ cutoff if it is proved in Lean and passes the `Comparator` challenge.
 
 ## Versions
 
-- Lean: `leanprover/lean4:v4.32.0-rc1`
-- mathlib: current `master`, locked to an exact revision by
-  `lake-manifest.json`
+- Lean: `leanprover/lean4:v4.32.0`
+- mathlib: `81a5d257c8e410db227a6665ed08f64fea08e997`, locked in both
+  `lakefile.lean` and `lake-manifest.json`
 
 ## Build
 

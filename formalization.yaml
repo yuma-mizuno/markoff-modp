@@ -26,7 +26,7 @@ related_projects:
     note: >-
       The `RiemannRoch/` directory vendors the transitive Lean source dependencies of Guanghao
       Li's coordinate-free Riemann-Roch development at the immutable revision above, with a small
-      mechanical compatibility port from Lean/Mathlib v4.31.0 to this repository's v4.32.0-rc1
+      mechanical compatibility port from Lean/Mathlib v4.31.0 to this repository's v4.32.0
       toolchain. It is a checked proof library, not a literature assumption: the BGS Hasse-Weil
       development imports `RiemannRoch.CoordinateFree.RiemannRoch` and transports that theorem to
       its exhaustive finite-extension place model. The independent elliptic-curve application from
